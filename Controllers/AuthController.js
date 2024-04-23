@@ -59,11 +59,7 @@ const check_admin_login =(req, res) => {
     console.log(token)
     if(token) {
         jwt.verify(token, process.env.JWT_SECRET, (err) => {
-            if(err) {
-                res.status(400).json({loggedIn: false})
-            } else {
-               res.status(200).json({loggedIn: true})
-            }
+            err ? res.status(400).json({loggedIn: false}) : res.status(200).json({loggedIn: true})
         })
     } else {
         res.status(400).json({loggedIn: false})
