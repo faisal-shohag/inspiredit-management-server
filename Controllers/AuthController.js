@@ -53,9 +53,28 @@ const admin_logout = async(req, res) => {
     }
 }
 
+
+const check_admin_login =(req, res) => {
+    const token = req.cookies.jwt_admin 
+    console.log(token)
+    if(token) {
+        jwt.verify(token, process.env.JWT_SECRET, (err) => {
+            if(err) {
+                res.status(400).json({loggedIn: false})
+            } else {
+               res.status(200).json({loggedIn: true})
+            }
+        })
+    } else {
+        res.status(400).json({loggedIn: false})
+    }
+}
+
+
+
 const handleError = (err) =>{
     let errors = {err: err.message}
     return errors;
 }
 
-export { admin_login, admin_logout }
+export { admin_login, admin_logout, check_admin_login }
