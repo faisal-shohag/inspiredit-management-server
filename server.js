@@ -8,6 +8,9 @@ import cors from 'cors';
 
 // 
 import authentication from './Authentication/Auth.js';
+import post from './API/post.js';
+import get from './API/get.js';
+import { isAdminAuth } from './Middlewares/AuthenticationMiddleware.js';
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -34,6 +37,12 @@ app.get('/', (req, res) => {
 })
 
 app.use(authentication)
+app.use(isAdminAuth)
+// app.get('/faisal', (res, req) => {
+//   res.send('Hello!')
+// })
+app.use(get)
+app.use(post)
 
 
 

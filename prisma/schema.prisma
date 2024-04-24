@@ -20,26 +20,26 @@ model Admin {
 model Teacher {
   id         Int      @id @default(autoincrement())
   uuid        String    @default(uuid())
-  name       String?
+  name       String
   email      String    @unique
-  phone      String?
+  phone      String
   password   String
   present_address  String?
   permanent_address String?
   joining_date String
-  salary Int
+  fixed_salary Int @default(0)
   nid String? 
   image Bytes?
   gender String?
   designation String?
   department String
-  date_of_birth String
-  education String
+  date_of_birth String?
+  education String?
   blood_group String?
-  employee_role String
   created_at DateTime  @default(now())
   classes ClassesOnTeachers[]
   attendance TeacherAttendence[]
+  salary Salary[]
 }
 
 
@@ -80,6 +80,8 @@ model Student {
   section Section @relation(fields: [sectionId], references: [id])
   sectionId Int
   attendance StudentAttendance[]
+  regularFee RegularFee[]
+  admissionFee AdmissionFee[]
 }
 
 model Class {
@@ -97,7 +99,7 @@ model Class {
 model Section {
   id Int  @id @default(autoincrement())
   name String?
-  students Student[]
+  student Student[]
   classes Class[]
   attendence StudentAttendance[]
 }
@@ -111,6 +113,7 @@ model StudentAttendance {
   classId Int
   section Section @relation(fields: [sectionId], references: [id])
   sectionId Int
+  isPresent Boolean
   date DateTime @default(now())
 }
 
@@ -119,6 +122,7 @@ model TeacherAttendence {
   id Int  @id @default(autoincrement())
   teacher Teacher @relation(fields: [teacherId], references: [id])
   teacherId Int
+  isPresent Boolean
   date DateTime @default(now())
 }
 
@@ -127,6 +131,7 @@ model StaffAttendance {
   id Int  @id @default(autoincrement())
   satff Staff @relation(fields: [staffId], references: [id])
   staffId Int
+  isPresent Boolean
   date DateTime @default(now())
 }
 
@@ -139,7 +144,7 @@ model Staff {
   present_address  String?
   permanent_address String?
   joining_date String
-  salary Int
+  fixed_salary Int
   nid String? 
   image Bytes?
   gender String?
@@ -151,11 +156,16 @@ model Staff {
   employee_role String
   created_at DateTime  @default(now())
   attendance StaffAttendance[]
+  salary Salary[]
 }
 
 model AdmissionFee {
   id         Int      @id @default(autoincrement())
-  
+  fee Int @default(0)
+  discount Int @default(0)
+  student Student @relation(fields: [studentId], references: [id])
+  collectionDate DateTime  @default(now())
+  studentId Int
 }
 
 
@@ -167,11 +177,22 @@ model RegularFee {
   others Int  @default(0)
   books Int  @default(0)
   uniform Int  @default(0)
-  
   discount Int @default(0)
+  student Student @relation(fields: [studentId], references: [id])
+  studentId Int
+  collectionDate DateTime  @default(now())
 }
 
-
+model Salary {
+  id         Int      @id @default(autoincrement())
+  monthly_salary Int  @default(0)
+  bonus Int @default(0)
+  teacher Teacher? @relation(fields: [teacherId], references: [id])
+  teacherId Int?
+  staff Staff? @relation(fields: [staffId], references: [id])
+  staffId Int?
+  paid_date DateTime @default(now())
+}
 
 
 
