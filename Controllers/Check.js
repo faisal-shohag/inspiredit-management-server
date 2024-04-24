@@ -1,4 +1,4 @@
-import prisma from "../db/db.config.js";
+// import prisma from "../db/db.config.js";
 import bcrypt from 'bcrypt';
 
 //check admin on database
