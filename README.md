@@ -37,6 +37,9 @@ fetch('http://{apiurl}/admin_login', {
 #### Admin Login
 ```javascript
 {api_url}/admin_login
+```
+
+```javascript
 fields: 
 {  
   name       String?
@@ -49,6 +52,8 @@ fields:
 #### Teacher adding
 ```javascript
 {api_url}/teacher
+```
+```javascript
 fields: 
 { 
   name       String
