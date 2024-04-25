@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import "dotenv/config"
-import { find_admin } from "./Check.js"
-
+import { find_admin, find_admin_only_with_id } from "./Check.js"
+import prisma from "../DB/db.config.js";
 
 //create jwt token with maxAge
 const maxAge = 2 * 24 * 60 * 60
@@ -35,7 +35,7 @@ const admin_login = async (req, res) => {
         const admin = await find_admin(email, password)
         const token = createToken(admin.id)
         res.cookie('jwt_admin', token, {httpOnly: true, maxAge: maxAge * 1000})
-        res.status(200).json({...admin, token})
+        res.status(200).json({...admin})
     } catch (error) {
         const errors = handleError(error)
         res.status(400).json({errors})
@@ -54,13 +54,22 @@ const admin_logout = async(req, res) => {
 }
 
 
-const check_admin_login =(req, res) => {
+const check_admin_login = async (req, res) => {
     const token = req.cookies.jwt_admin 
-    console.log(token)
     if(token) {
         jwt.verify(token, process.env.JWT_SECRET, (err) => {
-            err ? res.status(400).json({loggedIn: false}) : res.status(200).json({loggedIn: true})
+            if(err) res.status(400).json({loggedIn: false})
         })
+
+        const decode = jwt.verify(token, process.env.JWT_SECRET)
+
+        try {
+            const admin = await find_admin_only_with_id(decode.id)
+            res.status(200).json({...admin, loggedIn: true})
+        } catch (error) {
+            res.status(400).json({loggedIn: false})
+        }
+
     } else {
         res.status(400).json({loggedIn: false})
     }

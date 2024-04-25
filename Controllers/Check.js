@@ -1,6 +1,6 @@
 // import prisma from "../db/db.config.js";
 import bcrypt from 'bcrypt';
-
+import prisma from "../DB/db.config.js";
 //check admin on database
 const find_admin = async(email, password) => {
     const admin = await prisma.admin.findUnique({
@@ -15,4 +15,12 @@ const find_admin = async(email, password) => {
    throw Error('Email does not exist!')
 }
 
-export { find_admin }
+const find_admin_only_with_id = async (id) => {
+    const admin = await prisma.admin.findUnique({
+        where: {id: id}
+    })
+    if(admin) return admin
+    return Error('Admin does not exist!')
+}
+
+export { find_admin, find_admin_only_with_id }
