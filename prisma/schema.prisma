@@ -8,191 +8,185 @@ datasource db {
 }
 
 model Admin {
-  id         String       @id @default(uuid())
+  id         String   @id @default(uuid())
   name       String?
-  email      String    @unique
+  email      String   @unique
   phone      String?
   password   String
-  created_at DateTime  @default(now())
+  created_at DateTime @default(now())
 }
-
 
 model Teacher {
-  id         Int      @id @default(autoincrement())
-  uuid        String    @default(uuid())
-  name       String
-  email      String    @unique
-  phone      String
-  password   String
-  present_address  String?
-  permanent_address String?
-  joining_date String
-  fixed_salary Int @default(0)
-  nid String? 
-  image Bytes?
-  gender String?
-  designation String?
-  department String
-  date_of_birth String?
-  education String?
-  blood_group String?
-  created_at DateTime  @default(now())
-  classes ClassesOnTeachers[]
-  attendance TeacherAttendence[]
-  salary Salary[]
+  id                Int                  @id @default(autoincrement())
+  uuid              String               @default(uuid())
+  name              String
+  email             String               @unique
+  phone             String
+  password          String?
+  present_address   String?
+  joining_date      String
+  fixed_salary      Int                  @default(0)
+  nid               String?
+  image             Bytes?
+  gender            String?
+  designation       String?
+  department        String
+  date_of_birth     String?
+  education         String?
+  blood_group       String?
+  created_at        DateTime             @default(now())
+  isLeave           Boolean              @default(false)
+  parmanent_address String?
+  classes           ClassesAndTeachers[]
+  salary            Salary[]
+  attendance        TeacherAttendence[]
 }
 
+model ClassesAndTeachers {
+  teacherId  Int
+  classId    Int
+  created_at DateTime @default(now())
+  class      Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+  teacher    Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
 
-model ClassesOnTeachers {
-  teacher Teacher @relation(fields: [teacherId], references: [id])
-  teacherId Int
-  class Class @relation(fields: [classId], references: [id])
-  classId Int
-  created_at DateTime  @default(now())
   @@id([teacherId, classId])
+}
+
+model Class {
+  id         Int                  @id @default(autoincrement())
+  name       String?
+  fee        String?
+  created_at DateTime             @default(now())
+  teachers   ClassesAndTeachers[]
+  sections   Section[]
+  student    Student[]
+  attendance StudentAttendance[]
 }
 
 
 model Student {
-  id         Int      @id @default(autoincrement())
-  uuid        String    @default(uuid())
-  email      String    @unique
-  phone      String?
-  password   String
-  present_address  String
-  permanent_address String
-  // discount Int @default(0)
-  parent_name String
-  parent_phone String
-  local_guardian String?
+  id                   Int                 @id @default(autoincrement())
+  uuid                 String              @default(uuid())
+  name                 String
+  email                String              @unique
+  phone                String?
+  password             String
+  present_address      String
+  permanent_address    String
+  parent_name          String
+  parent_phone         String
+  local_guardian       String?
   local_guardian_phone String?
-  group String?
-  session String?
-  id_no Int @unique
-  image Bytes?
-  gender String
-  date_of_birth String
-  blood_group String?
-  admission_date DateTime? 
-  created_at DateTime  @default(now())
-  class Class @relation(fields: [classId], references: [id])
-  classId Int
-  section Section @relation(fields: [sectionId], references: [id])
-  sectionId Int
-  attendance StudentAttendance[]
-  regularFee RegularFee[]
-  admissionFee AdmissionFee[]
-}
-
-model Class {
-  id Int @id @default(autoincrement())
-  name String?
-  fee String?
-  created_at DateTime  @default(now())
-  teachers ClassesOnTeachers[]
-  student Student[]
-  section Section @relation(fields: [sectionId], references: [id])
-  sectionId Int
-  attendance StudentAttendance[]
+  group                String?
+  session              String?
+  id_no                Int                 @unique
+  image                Bytes?
+  gender               String
+  date_of_birth        String
+  birth_certificate_no String
+  blood_group          String?
+  admission_date       DateTime?
+  created_at           DateTime            @default(now())
+  classId              Int
+  sectionId            Int
+  admissionFee         AdmissionFee[]
+  regularFee           RegularFee[]
+  class                Class               @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  section              Section             @relation(fields: [sectionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  attendance           StudentAttendance[]
 }
 
 model Section {
-  id Int  @id @default(autoincrement())
-  name String?
-  student Student[]
-  classes Class[]
+  id         Int                 @id @default(autoincrement())
+  name       String?
+  classId    Int
+  class      Class               @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  student    Student[]
   attendence StudentAttendance[]
 }
 
-
 model StudentAttendance {
-  id Int  @id @default(autoincrement())
-  student Student @relation(fields: [studentId], references: [id])
+  id        Int      @id @default(autoincrement())
   studentId Int
-  class Class @relation(fields: [classId], references: [id])
-  classId Int
-  section Section @relation(fields: [sectionId], references: [id])
+  classId   Int
   sectionId Int
   isPresent Boolean
-  date DateTime @default(now())
+  date      DateTime @default(now())
+  class     Class    @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  section   Section  @relation(fields: [sectionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
-
 
 model TeacherAttendence {
-  id Int  @id @default(autoincrement())
-  teacher Teacher @relation(fields: [teacherId], references: [id])
+  id        Int      @id @default(autoincrement())
   teacherId Int
   isPresent Boolean
-  date DateTime @default(now())
+  date      DateTime @default(now())
+  teacher   Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
-
 model StaffAttendance {
-  id Int  @id @default(autoincrement())
-  satff Staff @relation(fields: [staffId], references: [id])
-  staffId Int
+  id        Int      @id @default(autoincrement())
+  staffId   Int
   isPresent Boolean
-  date DateTime @default(now())
+  date      DateTime @default(now())
+  satff     Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Staff {
-  id         Int      @id @default(autoincrement())
-  uuid        String    @default(uuid())
-  email      String    @unique
-  phone      String?
-  password   String
-  present_address  String?
+  id                Int               @id @default(autoincrement())
+  uuid              String            @default(uuid())
+  email             String            @unique
+  phone             String?
+  password          String
+  present_address   String?
   permanent_address String?
-  joining_date String
-  fixed_salary Int
-  nid String? 
-  image Bytes?
-  gender String?
-  designation String?
-  department String
-  date_of_birth String
-  education String
-  blood_group String?
-  employee_role String
-  created_at DateTime  @default(now())
-  attendance StaffAttendance[]
-  salary Salary[]
+  joining_date      String
+  fixed_salary      Int
+  nid               String?
+  image             Bytes?
+  gender            String?
+  designation       String?
+  department        String
+  date_of_birth     String
+  education         String
+  blood_group       String?
+  employee_role     String
+  created_at        DateTime          @default(now())
+  salary            Salary[]
+  attendance        StaffAttendance[]
 }
 
 model AdmissionFee {
-  id         Int      @id @default(autoincrement())
-  fee Int @default(0)
-  discount Int @default(0)
-  student Student @relation(fields: [studentId], references: [id])
-  collectionDate DateTime  @default(now())
-  studentId Int
+  id             Int      @id @default(autoincrement())
+  fee            Int      @default(0)
+  discount       Int      @default(0)
+  collectionDate DateTime @default(now())
+  studentId      Int
+  student        Student  @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
-
 model RegularFee {
-  id         Int      @id @default(autoincrement())
-  monthly_fee Int  @default(0)
-  fine Int  @default(0)
-  transport Int  @default(0)
-  others Int  @default(0)
-  books Int  @default(0)
-  uniform Int  @default(0)
-  discount Int @default(0)
-  student Student @relation(fields: [studentId], references: [id])
-  studentId Int
-  collectionDate DateTime  @default(now())
+  id             Int      @id @default(autoincrement())
+  monthly_fee    Int      @default(0)
+  fine           Int      @default(0)
+  transport      Int      @default(0)
+  others         Int      @default(0)
+  books          Int      @default(0)
+  uniform        Int      @default(0)
+  discount       Int      @default(0)
+  studentId      Int
+  collectionDate DateTime @default(now())
+  student        Student  @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Salary {
-  id         Int      @id @default(autoincrement())
-  monthly_salary Int  @default(0)
-  bonus Int @default(0)
-  teacher Teacher? @relation(fields: [teacherId], references: [id])
-  teacherId Int?
-  staff Staff? @relation(fields: [staffId], references: [id])
-  staffId Int?
-  paid_date DateTime @default(now())
+  id             Int      @id @default(autoincrement())
+  monthly_salary Int      @default(0)
+  bonus          Int      @default(0)
+  teacherId      Int?
+  staffId        Int?
+  paid_date      DateTime @default(now())
+  staff          Staff?   @relation(fields: [staffId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  teacher        Teacher? @relation(fields: [teacherId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
-
-
-
