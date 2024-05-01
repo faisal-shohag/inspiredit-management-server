@@ -10,6 +10,7 @@ import bodyParser from 'body-parser'
 import authentication from './Authentication/Auth.js';
 import post from './API/post.js';
 import get from './API/get.js';
+import counts from './API/counts.js'
 import { isAdminAuth } from './Middlewares/AuthenticationMiddleware.js';
 
 const app = express()
@@ -38,12 +39,13 @@ app.get('/', (req, res) => {
   res.send("🚀 Working fine!")
 })
 
-// app.use(authentication)
-// app.use(isAdminAuth)
+app.use(authentication)
+app.use(isAdminAuth)
 // app.get('/faisal', (res, req) => {
 //   res.send('Hello!')
 // })
 app.use(get)
+app.use(counts)
 app.use(post)
 
 

@@ -1,5 +1,6 @@
 import prisma from "../DB/db.config.js";
 import { Router } from "express";
+import {studentUploader} from '../Controllers/UploadController.js'
 const router = Router();
 
 const sendError = (res, error)=> {
@@ -75,5 +76,15 @@ router.post('/section_add', async(req, res) => {
     }
 })
 
+
+//image 
+router.post('/upload', studentUploader.single('image'), (req, res)=> {
+    if(!req.file) {
+        return res.status(400).send("No file to upload!")
+    }
+    console.log(req.file)
+
+    res.send({ok: "ok"})
+})
 
 export default router
