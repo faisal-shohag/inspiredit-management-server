@@ -2,6 +2,10 @@ import { Router } from "express";
 import jwt from 'jsonwebtoken';
 import prisma from "../DB/db.config.js";
 const router = Router();
+import path from 'path'
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+const __dirname = path.dirname(__filename); 
 
 //all teachers
 router.get("/teachers", async(req, res) => {
@@ -91,6 +95,13 @@ router.get("/class/:id", async(req, res) => {
       res.status(400).json({ err: err });
       console.log(err);
     }
+})
+
+
+router.get('/image', (req, res) => {
+  let dirname = __dirname.split('\\')
+  dirname.pop()
+ res.sendFile(path.join(dirname.join('\\'), 'uploads/students', '1714542107073.jpg'))
 })
 
 
