@@ -38,8 +38,8 @@ app.get('/', (req, res) => {
   res.send("🚀 Working fine!")
 })
 
-// app.use(authentication)
-// app.use(isAdminAuth)
+app.use(authentication)
+app.use(isAdminAuth)
 // app.get('/faisal', (res, req) => {
 //   res.send('Hello!')
 // })

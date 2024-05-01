@@ -54,7 +54,36 @@ router.get("/classes", async(req, res) => {
   try {
       const _class = await prisma.class.findMany({
         include: {
-          attendance: true
+          sections: true
+        },
+      });
+      res.status(200).json(_class);
+    } catch (err) {
+      res.status(400).json({ err: err });
+      console.log(err);
+    }
+})
+
+//get one class
+router.get("/class/:id", async(req, res) => {
+  const id = parseInt(req.params.id)
+  try {
+      const _class = await prisma.class.findUnique({
+        where: {
+          id: id
+        },
+        include: {
+          sections: {
+            include: {
+              student: true
+            },
+          },
+          student: true,
+          teachers: {
+            include: {
+              teacher: true
+            }
+          }
         },
       });
       res.status(200).json(_class);
