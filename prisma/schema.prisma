@@ -40,6 +40,7 @@ model Teacher {
   classes           ClassesAndTeachers[]
   salary            Salary[]
   attendance        TeacherAttendence[]
+  subjects          Subject[]
 }
 
 model ClassesAndTeachers {
@@ -57,10 +58,23 @@ model Class {
   name       String?
   fee        String?
   created_at DateTime             @default(now())
+  subject Subject[]
   teachers   ClassesAndTeachers[]
   sections   Section[]
   student    Student[]
   attendance StudentAttendance[]
+}
+
+
+model Subject {
+  // id                   Int                 @id @default(autoincrement())
+  name String
+  mark Int @default(0)
+  class Class @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  classId Int
+  teacher Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  teacherId Int
+  @@id([classId, teacherId])
 }
 
 
