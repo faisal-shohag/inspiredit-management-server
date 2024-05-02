@@ -88,11 +88,11 @@ model Student {
   admission_date       DateTime?
   created_at           DateTime            @default(now())
   classId              Int
-  sectionId            Int
+  sectionId            Int?
   admissionFee         AdmissionFee[]
   regularFee           RegularFee[]
   class                Class               @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  section              Section             @relation(fields: [sectionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  section              Section?             @relation(fields: [sectionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   attendance           StudentAttendance[]
 }
 
