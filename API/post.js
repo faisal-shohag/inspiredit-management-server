@@ -119,7 +119,7 @@ router.post('/subject_add', async(req, res) => {
 })
 
 //Settings
-router.post('/settings', async(req, res) => {
+router.post('/settings_add', async(req, res) => {
     const data = req.body
     try {
         const subject = await prisma.settings.create({
@@ -127,7 +127,7 @@ router.post('/settings', async(req, res) => {
         })
         res.status(200).json({success: true, created: subject})
     } catch (error) {
-        // sendError(res, error)
+        console.log(error)
         if(error.code == "P2002") 
            res.status(403).send({err: "This teacher is already been added for this class and subject!"})
         else res.status(400).json({err: "error"})

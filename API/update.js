@@ -25,7 +25,7 @@ router.put('/student_update/:id', async(req, res) => {
 })
 
 //setting update
-router.put('/settings/:id', async(req, res) => {
+router.put('/settings_update/:id', async(req, res) => {
     const data = req.body
     const id = parseInt(req.params.id)
     try {
@@ -39,7 +39,7 @@ router.put('/settings/:id', async(req, res) => {
     } catch (error) {
         // sendError(res, error)
         if(error.code == "P2002") 
-           res.status(403).send({err: "This teacher is already been added for this class and subject!"})
+           res.status(403).send({err: ""})
         else res.status(400).json({err: "error"})
     }
 })
