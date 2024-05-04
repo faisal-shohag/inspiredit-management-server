@@ -215,6 +215,6 @@ model Settings {
   phone String?
   address String?
   email String? 
-  founding_date DateTime?
+  founding_date String?
   eiin String?
 }

@@ -119,6 +119,17 @@ router.get("/class/:id", async(req, res) => {
     }
 })
 
+router.get("/settings", async(req, res) => {
+  try {
+      const settings = await prisma.settings.findMany({
+      });
+      res.status(200).json(settings);
+    } catch (err) {
+      res.status(400).json({ err: err });
+      console.log(err);
+    }
+})
+
 
 router.get('/image', (req, res) => {
   let dirname = __dirname.split('\\')
