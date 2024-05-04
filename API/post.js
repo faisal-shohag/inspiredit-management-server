@@ -18,7 +18,9 @@ router.post('/teacher_add', async(req, res) => {
         })
         res.status(200).json({success: true, created: teacher})
     } catch (error) {
-        sendError(res, error)
+        if(error.code == "P2002") 
+            res.status(403).send({err: "Teacher with this email already been created!"})
+         else res.status(400).json({err: "error"})
     }
 })
 
@@ -32,9 +34,30 @@ router.post('/student_add', async(req, res) => {
         })
         res.status(200).json({success: true, created: student})
     } catch (error) {
-        sendError(res, error)
+        console.log(error)
+        if(error.code == "P2002") 
+            res.status(403).send({err: "Student with this email already been created!"})
+         else res.status(400).json({err: "Something went wrong! Did you filled all the fields!"})
     }
 })
+
+//admission fee
+router.post('/admission_fee', async(req, res) => {
+    const data = req.body
+    try {
+        const subject = await prisma.admissionFee.create({
+            data: {...data}
+        })
+        res.status(200).json({success: true, created: subject})
+    } catch (error) {
+        // sendError(res, error)
+        console.log(error)
+        if(error.code == "P2002") 
+           res.status(403).send({err: "This teacher is already been added for this class and subject!"})
+        else res.status(400).json({err: "error"})
+    }
+})
+
 
 //sataff
 router.post('/staff_add', async(req, res) => {
@@ -59,7 +82,10 @@ router.post('/class_add', async(req, res) => {
         })
         res.status(200).json({success: true, created: _class})
     } catch (error) {
-        sendError(res, error)
+        // sendError(res, error)
+        if(error.code == "P2002") 
+           res.status(403).send({err: "Class with this name already been created! Choose another name."})
+        else res.status(400).json({err: "error"})
     }
 })
 
@@ -68,7 +94,7 @@ router.post('/section_add', async(req, res) => {
     const data = req.body
     try {
         const section = await prisma.section.create({
-            data: {...data}
+            data: {...data, classId: parseInt(data.classId)}
         })
         res.status(200).json({success: true, created: section})
     } catch (error) {
@@ -76,6 +102,21 @@ router.post('/section_add', async(req, res) => {
     }
 })
 
+//subject
+router.post('/subject_add', async(req, res) => {
+    const data = req.body
+    try {
+        const subject = await prisma.subject.create({
+            data: {...data}
+        })
+        res.status(200).json({success: true, created: subject})
+    } catch (error) {
+        // sendError(res, error)
+        if(error.code == "P2002") 
+           res.status(403).send({err: "This teacher is already been added for this class and subject!"})
+        else res.status(400).json({err: "error"})
+    }
+})
 
 //image 
 router.post('/upload', studentUploader.single('image'), (req, res)=> {

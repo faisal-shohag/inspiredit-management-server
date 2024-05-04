@@ -18,4 +18,19 @@ router.delete("/class/:id", async(req, res) => {
       }
   })
 
+  router.delete("/student/:id", async(req, res) => {
+    const id = parseInt(req.params.id)
+    try {
+        const student = await prisma.student.delete({
+          where: {
+            id: id
+          },
+    });
+        res.status(200).json(student);
+      } catch (err) {
+        res.status(400).json({ err: err });
+        console.log(err);
+      }
+  })
+
   export default router

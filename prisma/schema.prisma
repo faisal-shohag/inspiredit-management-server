@@ -40,6 +40,7 @@ model Teacher {
   classes           ClassesAndTeachers[]
   salary            Salary[]
   attendance        TeacherAttendence[]
+  subjects          Subject[]
 }
 
 model ClassesAndTeachers {
@@ -54,13 +55,26 @@ model ClassesAndTeachers {
 
 model Class {
   id         Int                  @id @default(autoincrement())
-  name       String?
+  name       String?  @unique
   fee        String?
   created_at DateTime             @default(now())
+  subject Subject[]
   teachers   ClassesAndTeachers[]
   sections   Section[]
   student    Student[]
   attendance StudentAttendance[]
+}
+
+
+model Subject {
+  // id                   Int                 @id @default(autoincrement())
+  name String
+  mark Int @default(0)
+  class Class @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  classId Int
+  teacher Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  teacherId Int
+  @@id([classId, teacherId])
 }
 
 
@@ -88,12 +102,37 @@ model Student {
   admission_date       DateTime?
   created_at           DateTime            @default(now())
   classId              Int
-  sectionId            Int
+  sectionId            Int?
   admissionFee         AdmissionFee[]
   regularFee           RegularFee[]
   class                Class               @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  section              Section             @relation(fields: [sectionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  section              Section?             @relation(fields: [sectionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   attendance           StudentAttendance[]
+}
+
+model AdmissionFee {
+  id             Int      @id @default(autoincrement())
+  fee            Float      @default(0)
+  other          Float      @default(0)
+  discount       Float      @default(0)
+  collectionDate DateTime @default(now())
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  studentId Int
+  readmission    Boolean @default(false)
+}
+
+model RegularFee {
+  id             Int      @id @default(autoincrement())
+  monthly_fee    Int      @default(0)
+  fine           Int      @default(0)
+  transport      Int      @default(0)
+  others         Int      @default(0)
+  books          Int      @default(0)
+  uniform        Int      @default(0)
+  discount       Int      @default(0)
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  studentId Int
+  collectionDate DateTime @default(now())
 }
 
 model Section {
@@ -157,28 +196,7 @@ model Staff {
   attendance        StaffAttendance[]
 }
 
-model AdmissionFee {
-  id             Int      @id @default(autoincrement())
-  fee            Int      @default(0)
-  discount       Int      @default(0)
-  collectionDate DateTime @default(now())
-  studentId      Int
-  student        Student  @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-}
 
-model RegularFee {
-  id             Int      @id @default(autoincrement())
-  monthly_fee    Int      @default(0)
-  fine           Int      @default(0)
-  transport      Int      @default(0)
-  others         Int      @default(0)
-  books          Int      @default(0)
-  uniform        Int      @default(0)
-  discount       Int      @default(0)
-  studentId      Int
-  collectionDate DateTime @default(now())
-  student        Student  @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-}
 
 model Salary {
   id             Int      @id @default(autoincrement())

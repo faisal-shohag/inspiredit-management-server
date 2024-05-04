@@ -11,6 +11,7 @@ import authentication from './Authentication/Auth.js';
 import post from './API/post.js';
 import get from './API/get.js';
 import dlt from './API/delete.js';
+import update from './API/update.js';
 import counts from './API/counts.js'
 import { isAdminAuth } from './Middlewares/AuthenticationMiddleware.js';
 
@@ -49,6 +50,7 @@ app.use(get)
 app.use(counts)
 app.use(post)
 app.use(dlt)
+app.use(update)
 
 
 
