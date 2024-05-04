@@ -30,6 +30,7 @@ router.put('/settings/:id', async(req, res) => {
     const id = parseInt(req.params.id)
     try {
         const subject = await prisma.settings.update({
+            
             data: {...data},
             where: {
                 id: id
