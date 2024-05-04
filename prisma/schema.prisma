@@ -208,3 +208,13 @@ model Salary {
   staff          Staff?   @relation(fields: [staffId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   teacher        Teacher? @relation(fields: [teacherId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
+
+model Settings {
+  id             Int      @id @default(autoincrement())
+  name  String?
+  phone String?
+  address String?
+  email String? 
+  founding_date DateTime?
+  eiin String?
+}
