@@ -4,6 +4,7 @@ import prisma from "../DB/db.config.js";
 const router = Router();
 import path from 'path'
 import { fileURLToPath } from 'url';
+import fs from 'fs'
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename); 
 
@@ -131,11 +132,59 @@ router.get("/settings", async(req, res) => {
 })
 
 
-router.get('/image', (req, res) => {
+router.get('/image2/:folder/:file', (req, res) => {
+  const folder = req.params.folder
+  const file = req.params.file
+
   let dirname = __dirname.split('\\')
   dirname.pop()
- res.sendFile(path.join(dirname.join('\\'), 'uploads/students', '1714542107073.jpg'))
+  const filepath = path.join(dirname.join('\\'), `resources/${folder}`, file)
+   fs.access(filepath, fs.constants.F_OK, (err) => {
+    if(err) {
+      console.log(err)
+      return res.status(404).send({err: 'File not found.'});
+    }
+    res.sendFile(filepath);
+   })
 })
+
+router.get('/image/:folder/:file', (req, res) => {
+  const folder = req.params.folder;
+  const fileName = req.params.file;
+  let dirname = __dirname.split('\\')
+  dirname.pop()
+
+  const resourcesDir = path.join(dirname.join('\\'), 'resources', folder);
+
+  const searchFile = (dir) => {
+    const files = fs.readdirSync(dir);
+    for (const file of files) {
+      const filePath = path.join(dir, file);
+      const stat = fs.statSync(filePath);
+      if (stat.isDirectory()) {
+        const found = searchFile(filePath);
+        if (found) {
+          return found;
+        }
+      } else if (file.split('.')[0] === fileName) {
+        return filePath;
+      }
+    }
+    return null;
+  };
+
+  // Search for the file
+  const filePath = searchFile(resourcesDir);
+
+  // Respond with the file if found
+  if (filePath) {
+    res.sendFile(filePath);
+  } else {
+    res.status(404).send({ error: 'Image not found.' });
+  }
+});
+
+
 
 
 export default router;

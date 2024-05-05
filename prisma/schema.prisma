@@ -27,7 +27,7 @@ model Teacher {
   joining_date      String
   fixed_salary      Int                  @default(0)
   nid               String?
-  image             Bytes?
+  image             String?
   gender            String?
   designation       String?
   department        String
@@ -94,7 +94,7 @@ model Student {
   group                String?
   session              String?
   id_no                Int                 @unique
-  image                Bytes?
+  image                String?
   gender               String
   date_of_birth        String
   birth_certificate_no String
@@ -183,7 +183,7 @@ model Staff {
   joining_date      String
   fixed_salary      Int
   nid               String?
-  image             Bytes?
+  image             String?
   gender            String?
   designation       String?
   department        String
@@ -217,4 +217,5 @@ model Settings {
   email String? 
   founding_date String?
   eiin String?
+  image String? 
 }
