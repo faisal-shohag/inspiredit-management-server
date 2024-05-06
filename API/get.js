@@ -40,6 +40,22 @@ router.get("/students", async(req, res) => {
     }
 })
 
+//last student
+router.get("/last_student", async(req, res) => {
+  try {
+      const students = await prisma.student.findMany({
+        orderBy: {
+          created_at: 'desc'
+        },
+        take: 1
+      });
+      res.status(200).json(students);
+    } catch (err) {
+      res.status(400).json({ err: err });
+      console.log(err);
+    }
+})
+
 
 //get student by id_no
 router.get("/student/:id", async(req, res) => {
