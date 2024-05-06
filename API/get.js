@@ -44,7 +44,7 @@ router.get("/students", async(req, res) => {
 //get student by id_no
 router.get("/student/:id", async(req, res) => {
   const id = parseInt(req.params.id)
-  console.log("ID", id)
+  console.log("ID", req.params.id)
   try {
       const students = await prisma.student.findUnique({
         where: {
@@ -57,8 +57,9 @@ router.get("/student/:id", async(req, res) => {
       });
       res.status(200).json(students);
     } catch (err) {
-      res.status(400).json({ err: err });
       console.log(err);
+      res.status(400).json({ err: err });
+      
     }
 })
 
