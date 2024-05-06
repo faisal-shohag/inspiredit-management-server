@@ -1,6 +1,6 @@
 import prisma from "../DB/db.config.js";
 import { Router } from "express";
-import {studentUploader, logoUploader} from '../Controllers/UploadController.js'
+import {studentUploader, logoUploader, teacherUploader} from '../Controllers/UploadController.js'
 const router = Router();
 
 const sendError = (res, error)=> {
@@ -18,6 +18,7 @@ router.post('/teacher_add', async(req, res) => {
         })
         res.status(200).json({success: true, created: teacher})
     } catch (error) {
+        console.log(error)
         if(error.code == "P2002") 
             res.status(403).send({err: "Teacher with this email already been created!"})
          else res.status(400).json({err: "error"})
@@ -136,6 +137,15 @@ router.post('/settings_add', async(req, res) => {
 
 //image 
 router.post('/student_upload', studentUploader.single('image'), (req, res)=> {
+    if(!req.file) {
+        return res.status(400).send("No file to upload!")
+    }
+    console.log(req.file)
+
+    res.send({ok: "ok", file: req.file})
+})
+
+router.post('/teacher_upload', teacherUploader.single('image'), (req, res)=> {
     if(!req.file) {
         return res.status(400).send("No file to upload!")
     }

@@ -27,6 +27,7 @@ model Teacher {
   joining_date      String
   fixed_salary      Int                  @default(0)
   nid               String?
+  id_no             Int            @unique
   image             String?
   gender            String?
   designation       String?
