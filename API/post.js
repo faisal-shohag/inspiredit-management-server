@@ -1,6 +1,7 @@
 import prisma from "../DB/db.config.js";
 import { Router } from "express";
 import {studentUploader, logoUploader, teacherUploader} from '../Controllers/UploadController.js'
+import { mailToStudent, mailToTeacher } from "../Controllers/MailController.js";
 const router = Router();
 
 const sendError = (res, error)=> {
@@ -16,6 +17,7 @@ router.post('/teacher_add', async(req, res) => {
         const teacher = await prisma.teacher.create({
             data: {...data}
         })
+        mailToTeacher(teacher)
         res.status(200).json({success: true, created: teacher})
     } catch (error) {
         console.log(error)
@@ -33,6 +35,7 @@ router.post('/student_add', async(req, res) => {
         const student = await prisma.student.create({
             data: {...data}
         })
+        mailToStudent(student)
         res.status(200).json({success: true, created: student})
     } catch (error) {
         console.log(error)

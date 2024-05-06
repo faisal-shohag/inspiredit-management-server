@@ -1,36 +1,75 @@
 import { Router } from "express";
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 import prisma from "../DB/db.config.js";
+import fs from 'fs'
+import path from 'path';
 const router = Router();
 
-router.delete("/class/:id", async(req, res) => {
-    const id = parseInt(req.params.id)
-    try {
-        const _class = await prisma.class.delete({
-          where: {
-            id: id
-          },
+const deleteImageFile = (fileNameWithoutExtension, dir) => {
+  const directoryPath = `resources/${dir}/`;
+  fs.readdir(directoryPath, (err, files) => {
+    if (err) {
+      console.error("Error reading directory:", err);
+      return;
+    }
+    const filesToDelete = files.filter((filename) =>
+      filename.startsWith(fileNameWithoutExtension)
+    );
+    filesToDelete.forEach((filename) => {
+      const filePath = path.join(directoryPath, filename);
+      fs.unlinkSync(filePath);
+      console.log("Deleted file:", filePath);
     });
-        res.status(200).json(_class);
-      } catch (err) {
-        res.status(400).json({ err: err });
-        console.log(err);
-      }
-  })
+  });
+};
 
-  router.delete("/student/:id", async(req, res) => {
-    const id = parseInt(req.params.id)
-    try {
-        const student = await prisma.student.delete({
-          where: {
-            id: id
-          },
+router.delete("/class/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  try {
+    const _class = await prisma.class.delete({
+      where: {
+        id: id,
+      },
     });
-        res.status(200).json(student);
-      } catch (err) {
-        res.status(400).json({ err: err });
-        console.log(err);
-      }
-  })
+    res.status(200).json(_class);
+  } catch (err) {
+    res.status(400).json({ err: err });
+    console.log(err);
+  }
+});
 
-  export default router
+router.delete("/student/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  try {
+    const student = await prisma.student.delete({
+      where: {
+        id_no: id,
+      },
+    });
+    deleteImageFile(student.id_no, 'students')
+    res.status(200).json(student);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ err: err });
+   
+  }
+});
+
+router.delete("/teacher/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  try {
+    const teacher = await prisma.teacher.delete({
+      where: {
+        id_no: id,
+      },
+    });
+    deleteImageFile(teacher.id_no, 'teachers')
+    res.status(200).json(teacher);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ err: err });
+   
+  }
+});
+
+export default router;
