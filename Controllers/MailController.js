@@ -17,7 +17,6 @@ const tp = nodemailer.createTransport({
 
 
 const mailToStudent = (student) => {
-
     const mailOptions = {
         from: 'cse1805027brur@gmail.com',
         to: student.email,
@@ -30,7 +29,6 @@ const mailToStudent = (student) => {
         else console.log('Email sent:', info)
     })
 
-
 }
 
 const mailToTeacher = (teacher) => {
@@ -38,7 +36,7 @@ const mailToTeacher = (teacher) => {
     const mailOptions = {
         from: 'cse1805027brur@gmail.com',
         to: teacher.email,
-        subject: `Congratulations to Joine inspiredIT as an ${teacher.designation} `,
+        subject: `Congratulations to Join inspiredIT as an ${teacher.designation} `,
         html: `<b>Congratulations ${teacher.name}</b>, You have successfully joined as ${teacher.designation} at InspiredIT. Your #ID: ${teacher.id_no}.`
     } 
 

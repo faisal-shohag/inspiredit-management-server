@@ -14,6 +14,17 @@ model Admin {
   phone      String?
   password   String
   created_at DateTime @default(now())
+  info       Boolean @default(false)
+  inst_name  String?
+  inst_phone String?
+  inst_address String?
+  inst_email String? 
+  inst_founding_date DateTime?
+  inst_eiin String?
+  inst_image String?
+  teacher_img_size Int @default(500)
+  student_img_size Int @default(500)
+  staff_img_size   Int @default(500)
 }
 
 model Teacher {
@@ -219,4 +230,5 @@ model Settings {
   founding_date String?
   eiin String?
   image String? 
+
 }
