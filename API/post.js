@@ -17,7 +17,7 @@ router.post('/teacher_add', async(req, res) => {
         const teacher = await prisma.teacher.create({
             data: {...data}
         })
-        mailToTeacher(teacher)
+        // mailToTeacher(teacher)
         res.status(200).json({success: true, created: teacher})
     } catch (error) {
         console.log(error)
@@ -35,7 +35,7 @@ router.post('/student_add', async(req, res) => {
         const student = await prisma.student.create({
             data: {...data}
         })
-        mailToStudent(student)
+        // mailToStudent(student)
         res.status(200).json({success: true, created: student})
     } catch (error) {
         console.log(error)
