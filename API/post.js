@@ -63,7 +63,7 @@ router.post('/admission_fee', async(req, res) => {
 })
 
 
-//sataff
+//staff
 router.post('/staff_add', async(req, res) => {
     const data = req.body
     // console.log(data)

@@ -38,6 +38,23 @@ router.get("/last_teacher", async(req, res) => {
     }
 })
 
+// get staff
+
+router.get("/last_staff", async(req, res) => {
+  try {
+      const staff = await prisma.staff.findMany({
+        orderBy: {
+          created_at: 'desc'
+        },
+        take: 1
+      });
+      res.status(200).json(staff);
+    } catch (err) {
+      res.status(400).json({ err: err });
+      console.log(err);
+    }
+})
+
 //all students
 router.get("/students", async(req, res) => {
   try {
