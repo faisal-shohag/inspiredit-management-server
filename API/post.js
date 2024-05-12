@@ -17,7 +17,7 @@ router.post('/teacher_add', async(req, res) => {
         const teacher = await prisma.teacher.create({
             data: {...data}
         })
-        mailToTeacher(teacher)
+        // mailToTeacher(teacher)
         res.status(200).json({success: true, created: teacher})
     } catch (error) {
         console.log(error)
@@ -63,7 +63,7 @@ router.post('/admission_fee', async(req, res) => {
 })
 
 
-//sataff
+//staff
 router.post('/staff_add', async(req, res) => {
     const data = req.body
     // console.log(data)
