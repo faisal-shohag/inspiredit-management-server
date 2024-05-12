@@ -135,13 +135,14 @@ model AdmissionFee {
 
 model RegularFee {
   id             Int      @id @default(autoincrement())
-  monthly_fee    Int      @default(0)
-  fine           Int      @default(0)
-  transport      Int      @default(0)
-  others         Int      @default(0)
-  books          Int      @default(0)
-  uniform        Int      @default(0)
-  discount       Int      @default(0)
+  regular_fee   Float    
+  fine           Float      @default(0)
+  transport_fee      Float      @default(0)
+  others_fee         Float      @default(0)
+  books_fee          Float      @default(0)
+  uniform_fee        Float      @default(0)
+  discount_fee       Float      @default(0)
+  id_card_fee       Float       @default(0)
   student Student @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   studentId Int
   collectionDate DateTime @default(now())

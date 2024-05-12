@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer'
 import "dotenv/config"
 import {htmlToText} from 'nodemailer-html-to-text';
+import ip from 'ip';
 
 const tp = nodemailer.createTransport({
     host: 'gmail',
@@ -44,8 +45,23 @@ const mailToTeacher = (teacher) => {
         if(err) console.log(err)
         else console.log('Email sent:', info)
     })
-
-
 }
 
-export {mailToStudent, mailToTeacher}
+
+
+const mailToAdmin = (admin) => {
+    const mailOptions = {
+        from: 'cse1805027brur@gmail.com',
+        to: admin.inst_email,
+        subject: `Settings Updated!`,
+        html: `<h3>Settings have been updated successfully of your ${admin.inst_name} Management System!</h3>`
+    } 
+
+    tp.sendMail(mailOptions, (err, info) => {
+        if(err) console.log(err)
+        else console.log('Email sent:', info)
+    })
+}
+
+
+export {mailToStudent, mailToTeacher, mailToAdmin}

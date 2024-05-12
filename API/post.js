@@ -35,7 +35,7 @@ router.post('/student_add', async(req, res) => {
         const student = await prisma.student.create({
             data: {...data}
         })
-        mailToStudent(student)
+        // mailToStudent(student)
         res.status(200).json({success: true, created: student})
     } catch (error) {
         console.log(error)
@@ -137,6 +137,24 @@ router.post('/settings_add', async(req, res) => {
         else res.status(400).json({err: "error"})
     }
 })
+
+router.post('/regular_fee', async(req, res) => {
+    const data = req.body
+    try {
+        const fee = await prisma.regularFee.create({
+            data: {...data}
+        })
+        res.status(200).json({success: true, created: fee})
+    } catch (error) {
+        console.log(error)
+        if(error.code == "P2002") 
+           res.status(403).send({err: ""})
+        else res.status(400).json({err: "error"})
+    }
+})
+
+
+
 
 //image 
 router.post('/student_upload', studentUploader.single('image'), (req, res)=> {

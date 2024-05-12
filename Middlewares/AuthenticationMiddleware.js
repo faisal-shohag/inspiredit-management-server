@@ -6,10 +6,10 @@ const isAdminAuth =(req, res, next) => {
     // console.log(token)
     if(token) {
         jwt.verify(token, process.env.JWT_SECRET, (err) => {
-            err ? res.status(400).json({"err": {"message": "authentication required"}}) : next()
+            err ? res.status(201).json({"err": {"message": "authentication required"}}) : next()
         })
     } else {
-        res.status(400).json({"err": {"message": "authentication required"}})
+        res.status(201).json({"err": {"message": "authentication required"}})
     }
 }
 

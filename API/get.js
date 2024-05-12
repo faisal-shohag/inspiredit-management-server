@@ -113,7 +113,8 @@ router.get("/classes", async(req, res) => {
   try {
       const _class = await prisma.class.findMany({
         include: {
-          sections: true
+          sections: true,
+          subject: true,
         },
       });
       res.status(200).json(_class);
@@ -132,6 +133,7 @@ router.get("/class/:id", async(req, res) => {
           id: id
         },
         include: {
+          subject: true,
           sections: {
             include: {
               student: true

@@ -1,7 +1,9 @@
 import prisma from "../DB/db.config.js";
 import { Router } from "express";
 import {studentUploader} from '../Controllers/UploadController.js'
+import { mailToAdmin } from "../Controllers/MailController.js";
 const router = Router();
+
 
 router.put('/admin_update/:id', async(req, res) => {
     const data = req.body
@@ -13,7 +15,10 @@ router.put('/admin_update/:id', async(req, res) => {
             },
             data: {...data}
         })
+
+        // mailToAdmin(admin)
         res.status(200).json({success: true, updated: admin})
+        
     } catch (error) {
         console.log(error)
         if(error.code == "P2002") 
@@ -34,7 +39,7 @@ router.put('/readmission/:id', async(req, res) => {
             },
             data: {...data}
         })
-        mailToStudent(student)
+        // mailToStudent(student)
         res.status(200).json({success: true, created: student})
     } catch (error) {
         console.log(error)

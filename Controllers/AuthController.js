@@ -39,7 +39,7 @@ const admin_login = async (req, res) => {
     } catch (error) {
         console.log(error)
         const errors = handleError(error)
-        res.status(400).json({errors})
+        res.status(201).json({errors})
     }
 }
 
@@ -60,7 +60,7 @@ const check_admin_login = async (req, res) => {
     // console.log(token)
     if(token) {
         jwt.verify(token, process.env.JWT_SECRET, (err) => {
-            if(err) res.status(400).json({loggedIn: false})
+            if(err) res.status(201).json({loggedIn: false})
         })
 
         const decode = jwt.verify(token, process.env.JWT_SECRET)
@@ -69,11 +69,11 @@ const check_admin_login = async (req, res) => {
             const admin = await find_admin_only_with_id(decode.id)
             res.status(200).json({...admin, loggedIn: true})
         } catch (error) {
-            res.status(400).json({loggedIn: false})
+            res.status(201).json({loggedIn: false})
         }
 
     } else {
-        res.status(400).json({loggedIn: false})
+        res.status(201).json({loggedIn: false})
     }
 }
 
