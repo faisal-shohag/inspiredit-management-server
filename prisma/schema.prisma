@@ -188,12 +188,14 @@ model StaffAttendance {
 model Staff {
   id                Int               @id @default(autoincrement())
   uuid              String            @default(uuid())
+  name              String
   email             String            @unique
   phone             String?
   password          String
   present_address   String?
   permanent_address String?
   joining_date      String
+  id_no             Int
   fixed_salary      Int
   nid               String?
   image             String?
@@ -203,7 +205,6 @@ model Staff {
   date_of_birth     String
   education         String
   blood_group       String?
-  employee_role     String
   created_at        DateTime          @default(now())
   salary            Salary[]
   attendance        StaffAttendance[]

@@ -72,6 +72,27 @@ router.get("/students", async(req, res) => {
     }
 })
 
+//students by class and sections
+router.get("/students/:classId/:sectionId", async(req, res) => {
+ const classId = parseInt(req.params.classId)
+ const sectionId = parseInt(req.params.sectionId)
+  try {
+      const students = await prisma.student.findMany({
+        where: {
+          classId: classId,
+          sectionId: sectionId
+        },
+        include: {
+          attendance: true
+        }
+      });
+      res.status(200).json(students);
+    } catch (err) {
+      res.status(400).json({ err: err });
+      console.log(err);
+    }
+})
+
 //last student
 router.get("/last_student", async(req, res) => {
   try {

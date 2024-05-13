@@ -1,6 +1,6 @@
 import prisma from "../DB/db.config.js";
 import { Router } from "express";
-import {studentUploader, logoUploader, teacherUploader} from '../Controllers/UploadController.js'
+import {studentUploader, logoUploader, teacherUploader, staffUploader} from '../Controllers/UploadController.js'
 import { mailToStudent, mailToTeacher } from "../Controllers/MailController.js";
 const router = Router();
 
@@ -45,6 +45,24 @@ router.post('/student_add', async(req, res) => {
     }
 })
 
+//staff add
+router.post('/staff_add', async(req, res) => {
+    const data = req.body
+    // console.log(data)
+    try {
+        const staff = await prisma.staff.create({
+            data: {...data}
+        })
+        // mailToTeacher(teacher)
+        res.status(200).json({success: true, created: staff})
+    } catch (error) {
+        console.log(error)
+        if(error.code == "P2002") 
+            res.status(403).send({err: "Staff with this email already been created!"})
+         else res.status(400).json({err: "error"})
+    }
+})
+
 //admission fee
 router.post('/admission_fee', async(req, res) => {
     const data = req.body
@@ -63,19 +81,7 @@ router.post('/admission_fee', async(req, res) => {
 })
 
 
-//staff
-router.post('/staff_add', async(req, res) => {
-    const data = req.body
-    // console.log(data)
-    try {
-        const staff = await prisma.staff.create({
-            data: {...data}
-        })
-        res.status(200).json({success: true, created: staff})
-    } catch (error) {
-        sendError(res, error)
-    }
-})
+
 
 //class 
 router.post('/class_add', async(req, res) => {
@@ -155,7 +161,6 @@ router.post('/regular_fee', async(req, res) => {
 
 
 
-
 //image 
 router.post('/student_upload', studentUploader.single('image'), (req, res)=> {
     if(!req.file) {
@@ -167,6 +172,15 @@ router.post('/student_upload', studentUploader.single('image'), (req, res)=> {
 })
 
 router.post('/teacher_upload', teacherUploader.single('image'), (req, res)=> {
+    if(!req.file) {
+        return res.status(400).send("No file to upload!")
+    }
+    console.log(req.file)
+
+    res.send({ok: "ok", file: req.file})
+})
+
+router.post('/staff_upload', staffUploader.single('image'), (req, res)=> {
     if(!req.file) {
         return res.status(400).send("No file to upload!")
     }
