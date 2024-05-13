@@ -72,15 +72,13 @@ router.get("/students", async(req, res) => {
     }
 })
 
-//students by class and sections
-router.get("/students/:classId/:sectionId", async(req, res) => {
+//students by class
+router.get("/students/:classId", async(req, res) => {
  const classId = parseInt(req.params.classId)
- const sectionId = parseInt(req.params.sectionId)
   try {
       const students = await prisma.student.findMany({
         where: {
           classId: classId,
-          sectionId: sectionId
         },
         include: {
           attendance: true
