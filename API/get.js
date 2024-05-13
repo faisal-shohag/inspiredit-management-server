@@ -190,7 +190,7 @@ router.get("/class/:id", async(req, res) => {
     }
 })
 
-router.get("/attendance/:classId/:date", async(req, res) => {
+router.get("/class/attendance/:classId/:date", async(req, res) => {
   const classId = parseInt(req.params.classId)
   const date = new Date(req.params.date)
   try {
