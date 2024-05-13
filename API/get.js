@@ -63,7 +63,10 @@ router.get("/students", async(req, res) => {
           section: true,
           class: true,
           attendance: true
-        }
+        },
+        orderBy: {
+          id_no: 'asc'
+        },
       });
       res.status(200).json(students);
     } catch (err) {
@@ -80,9 +83,13 @@ router.get("/students/:classId", async(req, res) => {
         where: {
           classId: classId,
         },
+        orderBy: {
+          id_no: 'asc'
+        },
         include: {
           attendance: true
-        }
+        },
+        
       });
       res.status(200).json(students);
     } catch (err) {
