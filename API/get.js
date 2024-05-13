@@ -196,6 +196,7 @@ router.get("/attendance/:classId/:date", async(req, res) => {
   try {
       const attendance = await prisma.studentAttendance.findMany({
         where: {
+          classId: classId,
           date: {
             gte: date,
             lte: date
