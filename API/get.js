@@ -200,14 +200,28 @@ router.get("/class/:id", async(req, res) => {
 router.get("/class/attendance/:classId/:date", async(req, res) => {
   const classId = parseInt(req.params.classId)
   const date = new Date(req.params.date)
+  console.log(date)
   try {
       const attendance = await prisma.studentAttendance.findMany({
+        orderBy: {
+          studentId: 'asc'
+        },
         where: {
           classId: classId,
           date: {
             gte: date,
             lte: date
-          }
+          },
+        },
+        include: {
+          student: {
+            include: {
+              attendance: true
+            }
+          },
+          class: true,
+          section: true,
+          
         }
       });
       res.status(200).json(attendance);
