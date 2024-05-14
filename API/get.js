@@ -121,7 +121,7 @@ router.get("/student/:id", async(req, res) => {
   const id = parseInt(req.params.id)
   console.log("ID", req.params.id)
   try {
-      const students = await prisma.student.findUnique({
+      let student = await prisma.student.findUnique({
         where: {
           id_no: id
         },
@@ -133,7 +133,15 @@ router.get("/student/:id", async(req, res) => {
           attendance: true,
         }
       });
-      res.status(200).json(students);
+      let regularfees = []
+      for(let i=0; i<student.regularFee.length; i++) {
+        regularfees.push({
+          ...student.regularFee[i],
+          total: (student.regularFee[i].regular_fee + student.regularFee[i].fine + student.regularFee[i].transport_fee + student.regularFee[i].others_fee + student.regularFee[i].books_fee + student.regularFee[i].uniform_fee  + student.regularFee[i].id_card_fee) - student.regularFee[i].discount_fee
+        })
+      }
+      student["regularFee"] = regularfees
+      res.status(200).json(student);
     } catch (err) {
       console.log(err);
       res.status(400).json({ err: err });
