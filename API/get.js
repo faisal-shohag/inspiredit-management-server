@@ -87,7 +87,8 @@ router.get("/students/:classId", async(req, res) => {
           id_no: 'asc'
         },
         include: {
-          attendance: true
+          attendance: true,
+          section: true
         },
         
       });
@@ -126,7 +127,8 @@ router.get("/student/:id", async(req, res) => {
         },
         include: {
           class: true,
-          section: true
+          section: true,
+          attendance: true,
         }
       });
       res.status(200).json(students);
@@ -182,7 +184,14 @@ router.get("/class/:id", async(req, res) => {
               student: true
             },
           },
-          student: true,
+          student: {
+            orderBy: {
+              id: 'asc'
+            },
+            include: {
+              section: true
+            }
+          },
           teachers: {
             include: {
               teacher: true
