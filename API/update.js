@@ -90,4 +90,29 @@ router.put('/settings_update/:id', async(req, res) => {
     }
 })
 
+
+router.put('/class/attendance/:attendanceId/:studentId/:date', async(req, res) => {
+    const data = req.body
+    const id = parseInt(req.params.studentId)
+    const date = new Date(req.params.date)
+    const attendanceId = parseInt(req.params.attendanceId)
+    console.log(data)
+    try {
+        const attendance = await prisma.studentAttendance.update({
+            data: {...data},
+            where: {
+                id: attendanceId,
+                studentId: id,
+                date: date
+            }
+        })
+        res.status(200).json({success: true, created: attendance})
+    } catch (error) {
+       console.log(error)
+        if(error.code == "P2002") 
+           res.status(403).send({err: ""})
+        else res.status(400).json({err: "error"})
+    }
+})
+
 export default router

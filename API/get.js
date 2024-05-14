@@ -87,7 +87,8 @@ router.get("/students/:classId", async(req, res) => {
           id_no: 'asc'
         },
         include: {
-          attendance: true
+          attendance: true,
+          section: true
         },
         
       });
@@ -129,6 +130,7 @@ router.get("/student/:id", async(req, res) => {
           section: true,
           admissionFee: true,
           regularFee: true,
+          attendance: true,
         }
       });
       res.status(200).json(students);
@@ -184,7 +186,14 @@ router.get("/class/:id", async(req, res) => {
               student: true
             },
           },
-          student: true,
+          student: {
+            orderBy: {
+              id: 'asc'
+            },
+            include: {
+              section: true
+            }
+          },
           teachers: {
             include: {
               teacher: true
@@ -202,14 +211,28 @@ router.get("/class/:id", async(req, res) => {
 router.get("/class/attendance/:classId/:date", async(req, res) => {
   const classId = parseInt(req.params.classId)
   const date = new Date(req.params.date)
+  console.log(date)
   try {
       const attendance = await prisma.studentAttendance.findMany({
+        orderBy: {
+          studentId: 'asc'
+        },
         where: {
           classId: classId,
           date: {
             gte: date,
             lte: date
-          }
+          },
+        },
+        include: {
+          student: {
+            include: {
+              attendance: true
+            }
+          },
+          class: true,
+          section: true,
+          
         }
       });
       res.status(200).json(attendance);
