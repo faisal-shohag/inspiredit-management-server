@@ -126,7 +126,9 @@ router.get("/student/:id", async(req, res) => {
         },
         include: {
           class: true,
-          section: true
+          section: true,
+          admissionFee: true,
+          regularFee: true,
         }
       });
       res.status(200).json(students);
