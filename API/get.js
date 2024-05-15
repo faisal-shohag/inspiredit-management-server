@@ -176,7 +176,9 @@ router.get("/teacher/:id", async(req, res) => {
           id_no: id
         },
         include: {
-          salary: true
+          salary: true,
+          classes: true,
+          attendance: true,
         }
       });
       res.status(200).json(teacher);
