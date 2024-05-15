@@ -167,7 +167,7 @@ router.get("/student/:id", async(req, res) => {
     }
 })
 
-//get staff by id_no
+//get teacher by id_no
 router.get("/teacher/:id", async(req, res) => {
   const id = parseInt(req.params.id)
   try {
