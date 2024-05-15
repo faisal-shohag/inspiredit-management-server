@@ -134,6 +134,7 @@ router.get("/student/:id", async(req, res) => {
         }
       });
       res.status(200).json(students);
+      
     } catch (err) {
       console.log(err);
       res.status(400).json({ err: err });

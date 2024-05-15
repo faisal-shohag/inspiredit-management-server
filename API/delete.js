@@ -72,4 +72,21 @@ router.delete("/teacher/:id", async (req, res) => {
   }
 });
 
+router.delete("/staff/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  try {
+    const staff = await prisma.staff.delete({
+      where: {
+        id_no: id,
+      },
+    });
+    deleteImageFile(staff.id_no, 'staff')
+    res.status(200).json(staff);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ err: err });
+   
+  }
+});
+
 export default router;
