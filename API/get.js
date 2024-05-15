@@ -177,7 +177,11 @@ router.get("/teacher/:id", async(req, res) => {
         },
         include: {
           salary: true,
-          classes: true,
+          classes: {
+            include: {
+              class: true
+            }
+          },
           attendance: true,
         }
       });
