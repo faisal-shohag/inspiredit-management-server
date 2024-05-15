@@ -55,6 +55,22 @@ router.get("/last_staff", async(req, res) => {
     }
 })
 
+//all staffs
+router.get("/staffs", async(req, res) => {
+  try {
+      const staff = await prisma.staff.findMany({
+        include: {
+          attendance: true
+        },
+      });
+      res.status(200).json(staff);
+    } catch (err) {
+      res.status(400).json({ err: err });
+      console.log(err);
+    }
+})
+
+
 //all students
 router.get("/students", async(req, res) => {
   try {
