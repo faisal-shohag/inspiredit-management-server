@@ -240,10 +240,10 @@ model Settings {
 
 model Account {
   id              Int      @id @default(autoincrement())
-  name_of_head    String?
+  purpose    String?
   type            String?
   date            DateTime @default(now())
   amount          Int
-  transactionType String?
+  transaction_type String?
   check_number    String?
 }
