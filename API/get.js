@@ -177,7 +177,11 @@ router.get("/teacher/:id", async(req, res) => {
         },
         include: {
           salary: true,
-          classes: true,
+          classes: {
+            include: {
+              class: true
+            }
+          },
           attendance: true,
         }
       });
@@ -318,6 +322,17 @@ router.get("/settings", async(req, res) => {
       const settings = await prisma.settings.findMany({
       });
       res.status(200).json(settings);
+    } catch (err) {
+      res.status(400).json({ err: err });
+      console.log(err);
+    }
+})
+
+
+router.get("/accounts", async(req, res) => {
+  try {
+      const accounts = await prisma.account.findMany({});
+      res.status(200).json(accounts);
     } catch (err) {
       res.status(400).json({ err: err });
       console.log(err);

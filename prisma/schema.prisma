@@ -234,3 +234,13 @@ model Settings {
   image String? 
 
 }
+
+model Account {
+  id             Int      @id @default(autoincrement())
+  name_of_head String?
+  type String?
+  date DateTime @default(now())
+  amount Int
+  transactionType String?
+  check_number String?
+}
