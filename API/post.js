@@ -159,6 +159,22 @@ router.post('/regular_fee', async(req, res) => {
     }
 })
 
+//add salary
+router.post('/salary_add', async(req, res) => {
+    const data = req.body
+    try {
+        const salary = await prisma.salary.create({
+            data: {...data}
+        })
+        res.status(200).json({success: true, created: salary})
+    } catch (error) {
+        console.log(error)
+        if(error.code == "P2002") 
+           res.status(403).send({err: ""})
+        else res.status(400).json({err: "error"})
+    }
+})
+
 router.post('/class/attendances', async(req, res) => {
     const data = req.body
     try {
