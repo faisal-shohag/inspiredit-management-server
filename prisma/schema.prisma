@@ -195,7 +195,7 @@ model Staff {
   present_address   String?
   permanent_address String?
   joining_date      String
-  id_no             Int
+  id_no             Int  @unique
   fixed_salary      Int
   nid               String?
   image             String?
