@@ -8,23 +8,23 @@ datasource db {
 }
 
 model Admin {
-  id         String   @id @default(uuid())
-  name       String?
-  email      String   @unique
-  phone      String?
-  password   String
-  created_at DateTime @default(now())
-  info       Boolean @default(false)
-  inst_name  String?
-  inst_phone String?
-  inst_address String?
-  inst_email String? 
+  id                 String    @id @default(uuid())
+  name               String?
+  email              String    @unique
+  phone              String?
+  password           String
+  created_at         DateTime  @default(now())
+  info               Boolean   @default(false)
+  inst_address       String?
+  inst_eiin          String?
+  inst_email         String?
   inst_founding_date DateTime?
-  inst_eiin String?
-  inst_image String?
-  teacher_img_size Int @default(500)
-  student_img_size Int @default(500)
-  staff_img_size   Int @default(500)
+  inst_image         String?
+  inst_name          String?
+  inst_phone         String?
+  staff_img_size     Int       @default(500)
+  student_img_size   Int       @default(500)
+  teacher_img_size   Int       @default(500)
 }
 
 model Teacher {
@@ -38,7 +38,6 @@ model Teacher {
   joining_date      String
   fixed_salary      Int                  @default(0)
   nid               String?
-  id_no             Int            @unique
   image             String?
   gender            String?
   designation       String?
@@ -49,10 +48,11 @@ model Teacher {
   created_at        DateTime             @default(now())
   isLeave           Boolean              @default(false)
   parmanent_address String?
+  id_no             Int                  @unique
   classes           ClassesAndTeachers[]
-  salary            Salary[]
-  attendance        TeacherAttendence[]
+  salary            TeacherSalary[]
   subjects          Subject[]
+  attendance        TeacherAttendence[]
 }
 
 model ClassesAndTeachers {
@@ -67,33 +67,30 @@ model ClassesAndTeachers {
 
 model Class {
   id         Int                  @id @default(autoincrement())
-  name       String?  @unique
+  name       String?              @unique
   fee        String?
   created_at DateTime             @default(now())
-  subject Subject[]
   teachers   ClassesAndTeachers[]
   sections   Section[]
   student    Student[]
   attendance StudentAttendance[]
+  subject    Subject[]
 }
-
 
 model Subject {
-  // id                   Int                 @id @default(autoincrement())
-  name String
-  mark Int @default(0)
-  class Class @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  classId Int
-  teacher Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  name      String
+  classId   Int
+  mark      Int     @default(0)
   teacherId Int
+  class     Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
+  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
   @@id([classId, teacherId])
 }
-
 
 model Student {
   id                   Int                 @id @default(autoincrement())
   uuid                 String              @default(uuid())
-  name                 String
   email                String              @unique
   phone                String?
   password             String
@@ -109,50 +106,51 @@ model Student {
   image                String?
   gender               String
   date_of_birth        String
-  birth_certificate_no String
   blood_group          String?
   admission_date       DateTime?
   created_at           DateTime            @default(now())
   classId              Int
   sectionId            Int?
+  birth_certificate_no String
+  name                 String
   admissionFee         AdmissionFee[]
   regularFee           RegularFee[]
-  class                Class               @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  section              Section?             @relation(fields: [sectionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  class                Class               @relation(fields: [classId], references: [id], onDelete: Cascade)
+  section              Section?            @relation(fields: [sectionId], references: [id], onDelete: Cascade)
   attendance           StudentAttendance[]
 }
 
 model AdmissionFee {
   id             Int      @id @default(autoincrement())
-  fee            Float      @default(0)
-  other          Float      @default(0)
-  discount       Float      @default(0)
+  fee            Float    @default(0)
+  discount       Float    @default(0)
   collectionDate DateTime @default(now())
-  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  studentId Int
-  readmission    Boolean @default(false)
+  studentId      Int
+  other          Float    @default(0)
+  readmission    Boolean  @default(false)
+  student        Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
 }
 
 model RegularFee {
   id             Int      @id @default(autoincrement())
-  regular_fee   Float    
-  fine           Float      @default(0)
-  transport_fee      Float      @default(0)
-  others_fee         Float      @default(0)
-  books_fee          Float      @default(0)
-  uniform_fee        Float      @default(0)
-  discount_fee       Float      @default(0)
-  id_card_fee       Float       @default(0)
-  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  studentId Int
+  fine           Float    @default(0)
+  studentId      Int
   collectionDate DateTime @default(now())
+  books_fee      Float    @default(0)
+  discount_fee   Float    @default(0)
+  id_card_fee    Float    @default(0)
+  others_fee     Float    @default(0)
+  regular_fee    Float
+  transport_fee  Float    @default(0)
+  uniform_fee    Float    @default(0)
+  student        Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
 }
 
 model Section {
   id         Int                 @id @default(autoincrement())
   name       String?
   classId    Int
-  class      Class               @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  class      Class               @relation(fields: [classId], references: [id], onDelete: Cascade)
   student    Student[]
   attendence StudentAttendance[]
 }
@@ -161,12 +159,12 @@ model StudentAttendance {
   id        Int      @id @default(autoincrement())
   studentId Int
   classId   Int
-  sectionId Int? 
+  sectionId Int?
   isPresent Boolean
   date      DateTime @default(now())
-  class     Class    @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  section   Section?  @relation(fields: [sectionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  class     Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+  section   Section? @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
 }
 
 model TeacherAttendence {
@@ -174,7 +172,7 @@ model TeacherAttendence {
   teacherId Int
   isPresent Boolean
   date      DateTime @default(now())
-  teacher   Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  teacher   Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
 }
 
 model StaffAttendance {
@@ -182,20 +180,18 @@ model StaffAttendance {
   staffId   Int
   isPresent Boolean
   date      DateTime @default(now())
-  satff     Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  satff     Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
 }
 
 model Staff {
   id                Int               @id @default(autoincrement())
   uuid              String            @default(uuid())
-  name              String
   email             String            @unique
   phone             String?
   password          String
   present_address   String?
   permanent_address String?
   joining_date      String
-  id_no             Int  @unique
   fixed_salary      Int
   nid               String?
   image             String?
@@ -206,41 +202,48 @@ model Staff {
   education         String
   blood_group       String?
   created_at        DateTime          @default(now())
-  salary            Salary[]
+  id_no             Int               @unique
+  name              String
+  salary            StaffSalary[]
   attendance        StaffAttendance[]
 }
 
 
-
-model Salary {
+model TeacherSalary{
   id             Int      @id @default(autoincrement())
   monthly_salary Int      @default(0)
   bonus          Int      @default(0)
-  teacherId      Int?
+  teacherId      Int
+  paid_date      DateTime @default(now())
+  teacher        Teacher? @relation(fields: [teacherId], references: [id_no], onDelete: Cascade)
+}
+
+model StaffSalary{
+  id             Int      @id @default(autoincrement())
+  monthly_salary Int      @default(0)
+  bonus          Int      @default(0)
   staffId        Int?
   paid_date      DateTime @default(now())
-  staff          Staff?   @relation(fields: [staffId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  teacher        Teacher? @relation(fields: [teacherId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  staff          Staff?   @relation(fields: [staffId], references: [id_no], onDelete: Cascade)
 }
 
 model Settings {
-  id             Int      @id @default(autoincrement())
-  name  String?
-  phone String?
-  address String?
-  email String? 
+  id            Int     @id @default(autoincrement())
+  name          String?
+  phone         String?
+  address       String?
+  email         String?
   founding_date String?
-  eiin String?
-  image String? 
-
+  eiin          String?
+  image         String?
 }
 
 model Account {
-  id             Int      @id @default(autoincrement())
-  name_of_head String?
-  type String?
-  date DateTime @default(now())
-  amount Int
+  id              Int      @id @default(autoincrement())
+  name_of_head    String?
+  type            String?
+  date            DateTime @default(now())
+  amount          Int
   transactionType String?
-  check_number String?
+  check_number    String?
 }
