@@ -329,6 +329,17 @@ router.get("/settings", async(req, res) => {
 })
 
 
+router.get("/accounts", async(req, res) => {
+  try {
+      const accounts = await prisma.account.findMany({});
+      res.status(200).json(accounts);
+    } catch (err) {
+      res.status(400).json({ err: err });
+      console.log(err);
+    }
+})
+
+
 router.get('/image2/:folder/:file', (req, res) => {
   const folder = req.params.folder
   const file = req.params.file
