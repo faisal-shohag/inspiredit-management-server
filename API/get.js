@@ -167,6 +167,47 @@ router.get("/student/:id", async(req, res) => {
     }
 })
 
+//get staff by id_no
+router.get("/teacher/:id", async(req, res) => {
+  const id = parseInt(req.params.id)
+  try {
+      let teacher = await prisma.teacher.findUnique({
+        where: {
+          id_no: id
+        },
+        include: {
+          salary: true
+        }
+      });
+      res.status(200).json(teacher);
+    } catch (err) {
+      console.log(err);
+      res.status(400).json({ err: err });
+      
+    }
+})
+
+
+//get staff by id_no
+router.get("/staff/:id", async(req, res) => {
+  const id = parseInt(req.params.id)
+  try {
+      let staff = await prisma.staff.findUnique({
+        where: {
+          id_no: id
+        },
+        include: {
+          salary: true
+        }
+      });
+      res.status(200).json(staff);
+    } catch (err) {
+      console.log(err);
+      res.status(400).json({ err: err });
+      
+    }
+})
+
 
 router.get("/sections", async(req, res) => {
   try {
