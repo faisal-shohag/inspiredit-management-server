@@ -66,6 +66,10 @@ router.post('/staff_add', async(req, res) => {
 //admission fee
 router.post('/admission_fee', async(req, res) => {
     const data = req.body
+    const transactions = await prisma.transactions.create({
+        data: {...data}
+    })
+    console.log(transactions)
     try {
         const subject = await prisma.admissionFee.create({
             data: {...data}
@@ -219,6 +223,22 @@ router.post('/class/attendances', async(req, res) => {
             data: data
         })
         res.status(200).json({success: true, created: student_attendances})
+    } catch (error) {
+        console.log(error)
+        if(error.code == "P2002") 
+           res.status(403).send({err: ""})
+        else res.status(400).json({err: "error"})
+    }
+})
+
+router.post('/transaction_add', async(req, res) => {
+    const data = req.body
+    console.log(data)
+    try {
+        const transactions = await prisma.transactions.create({
+            data: {...data}
+        })
+        res.status(200).json({success: true, created: transactions})
     } catch (error) {
         console.log(error)
         if(error.code == "P2002") 

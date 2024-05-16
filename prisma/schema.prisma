@@ -50,9 +50,9 @@ model Teacher {
   parmanent_address String?
   id_no             Int                  @unique
   classes           ClassesAndTeachers[]
-  salary            TeacherSalary[]
   subjects          Subject[]
   attendance        TeacherAttendence[]
+  salary            TeacherSalary[]
 }
 
 model ClassesAndTeachers {
@@ -68,8 +68,8 @@ model ClassesAndTeachers {
 model Class {
   id         Int                  @id @default(autoincrement())
   name       String?              @unique
-  fee        Float                @default(0)
   created_at DateTime             @default(now())
+  fee        Float                @default(0)
   teachers   ClassesAndTeachers[]
   sections   Section[]
   student    Student[]
@@ -79,8 +79,8 @@ model Class {
 
 model Subject {
   name      String
-  classId   Int
   mark      Int     @default(0)
+  classId   Int
   teacherId Int
   class     Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
   teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
@@ -143,7 +143,7 @@ model RegularFee {
   regular_fee    Float
   transport_fee  Float    @default(0)
   uniform_fee    Float    @default(0)
-  due            Float    @default(0)  
+  due            Float    @default(0)
   student        Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
 }
 
@@ -205,21 +205,20 @@ model Staff {
   created_at        DateTime          @default(now())
   id_no             Int               @unique
   name              String
-  salary            StaffSalary[]
   attendance        StaffAttendance[]
+  salary            StaffSalary[]
 }
 
-
-model TeacherSalary{
+model TeacherSalary {
   id             Int      @id @default(autoincrement())
   monthly_salary Int      @default(0)
   bonus          Int      @default(0)
   teacherId      Int
   paid_date      DateTime @default(now())
-  teacher        Teacher? @relation(fields: [teacherId], references: [id_no], onDelete: Cascade)
+  teacher        Teacher  @relation(fields: [teacherId], references: [id_no], onDelete: Cascade)
 }
 
-model StaffSalary{
+model StaffSalary {
   id             Int      @id @default(autoincrement())
   monthly_salary Int      @default(0)
   bonus          Int      @default(0)
@@ -240,21 +239,19 @@ model Settings {
 }
 
 model Account {
-  id              Int      @id @default(autoincrement())
-  purpose    String?
-  type            String?
-  date            DateTime @default(now())
-  amount          Int
+  id               Int      @id @default(autoincrement())
+  type             String?
+  date             DateTime @default(now())
+  amount           Int
+  check_number     String?
+  purpose          String?
   transaction_type String?
-  check_number    String?
 }
-
 
 model Transactions {
-  id              Int      @id @default(autoincrement())
-  cause   String
-  amount String
-  date DateTime @default(now())
+  id     Int      @id @default(autoincrement())
+  amount Float    @default(0)
+  date   DateTime @default(now())
+  name   String
+  type   String
 }
-
-
