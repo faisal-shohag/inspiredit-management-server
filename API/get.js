@@ -149,7 +149,7 @@ router.get("/student/:id", async(req, res) => {
           attendance: true,
         }
       });
-      res.status(200).json(students);
+      // res.status(200).json(students);
       
       let regularfees = []
       for(let i=0; i<student.regularFee.length; i++) {

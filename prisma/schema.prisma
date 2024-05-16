@@ -68,7 +68,7 @@ model ClassesAndTeachers {
 model Class {
   id         Int                  @id @default(autoincrement())
   name       String?              @unique
-  fee        String?
+  fee        Float                @default(0)
   created_at DateTime             @default(now())
   teachers   ClassesAndTeachers[]
   sections   Section[]

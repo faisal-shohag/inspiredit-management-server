@@ -35,6 +35,21 @@ router.get("/staff_count", async(req, res) => {
 })
 
 
+router.get("/count", async(req, res) => {
+  try {
+      const teacher = await prisma.teacher.count()
+      const student = await prisma.student.count()
+      const staff = await prisma.staff.count()
+
+      res.status(200).json({teacher, student, staff});
+    } catch (err) {
+      res.status(400).json({ err: err });
+      console.log(err);
+    }
+})
+
+
+
 
 router.get("/class_student_count/:id", async(req, res) => {
     try {const id = parseInt(req.params.id)
