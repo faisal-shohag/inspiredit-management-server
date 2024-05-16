@@ -250,4 +250,11 @@ model Account {
 }
 
 
+model Transactions {
+  id              Int      @id @default(autoincrement())
+  cause   String
+  amount String
+  date DateTime @default(now())
+}
+
 
