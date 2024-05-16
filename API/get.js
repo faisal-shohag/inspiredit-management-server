@@ -149,16 +149,35 @@ router.get("/student/:id", async(req, res) => {
           attendance: true,
         }
       });
-      // res.status(200).json(students);
-      
       let regularfees = []
+      let total_regular_fee = 0
+      let subtotal_regular_fee = 0
       for(let i=0; i<student.regularFee.length; i++) {
+        total_regular_fee = (student.regularFee[i].regular_fee + student.regularFee[i].fine + student.regularFee[i].transport_fee + student.regularFee[i].others_fee + student.regularFee[i].books_fee + student.regularFee[i].uniform_fee  + student.regularFee[i].id_card_fee) - student.regularFee[i].discount_fee
         regularfees.push({
           ...student.regularFee[i],
-          total: (student.regularFee[i].regular_fee + student.regularFee[i].fine + student.regularFee[i].transport_fee + student.regularFee[i].others_fee + student.regularFee[i].books_fee + student.regularFee[i].uniform_fee  + student.regularFee[i].id_card_fee) - student.regularFee[i].discount_fee
+          total: total_regular_fee
         })
+        subtotal_regular_fee += total_regular_fee
       }
+
+      // admission fee 
+      let admissionfees = [];
+      let total_admission_fee = 0;
+      let subtotal_admission_fee = 0
+      for(let i=0; i<student.admissionFee.length; i++) {
+        total_admission_fee  = (student.admissionFee[i].fee + student.admissionFee[i].other) - student.admissionFee[i].discount
+        admissionfees.push({
+          ...student.admissionFee[i],
+          total: total_admission_fee
+        })
+        subtotal_admission_fee += total_admission_fee
+      }
+
       student["regularFee"] = regularfees
+      student["admissionFee"] = admissionfees
+      student["due"] =  student.class.fee - (subtotal_admission_fee + subtotal_regular_fee)
+
       res.status(200).json(student);
     } catch (err) {
       console.log(err);

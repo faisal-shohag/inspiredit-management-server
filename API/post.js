@@ -92,6 +92,7 @@ router.post('/class_add', async(req, res) => {
         })
         res.status(200).json({success: true, created: _class})
     } catch (error) {
+        console.log(error)
         // sendError(res, error)
         if(error.code == "P2002") 
            res.status(403).send({err: "Class with this name already been created! Choose another name."})
