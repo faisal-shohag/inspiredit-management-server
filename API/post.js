@@ -67,7 +67,7 @@ router.post('/staff_add', async(req, res) => {
 router.post('/admission_fee', async(req, res) => {
     const data = req.body
     const transactions = await prisma.transactions.create({
-        data: {amount: data.fee, name: 'Addmission Fee', type: 'income'}
+        data: {amount: (data.fee + data.other) - discount, name: 'Addmission Fee', type: 'income'}
     })
     // console.log(transactions)
     try {
@@ -151,6 +151,9 @@ router.post('/settings_add', async(req, res) => {
 
 router.post('/regular_fee', async(req, res) => {
     const data = req.body
+    const transactions = await prisma.transactions.create({
+        data: {amount: (data.regular_fee + data.others_fee + id_card_fee) - discount_fee, name: 'Regular Fee', type: 'income'}
+    })
     try {
         const fee = await prisma.regularFee.create({
             data: {...data}
