@@ -134,8 +134,8 @@ router.get("/last_student", async(req, res) => {
 
 //get student by id_no
 router.get("/student/:id", async(req, res) => {
-  const id = parseInt(req.params.id)
-  console.log("ID", req.params.id)
+  const id = req.params.id
+  // console.log("ID", req.params.id)
   try {
       let student = await prisma.student.findUnique({
         where: {
@@ -149,6 +149,7 @@ router.get("/student/:id", async(req, res) => {
           attendance: true,
         }
       });
+      console.log(student)
       let regularfees = []
       let total_regular_fee = 0
       let subtotal_regular_fee = 0

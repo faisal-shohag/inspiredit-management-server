@@ -67,9 +67,9 @@ router.post('/staff_add', async(req, res) => {
 router.post('/admission_fee', async(req, res) => {
     const data = req.body
     const transactions = await prisma.transactions.create({
-        data: {...data}
+        data: {amount: data.fee, name: 'Addmission Fee', type: 'income'}
     })
-    console.log(transactions)
+    // console.log(transactions)
     try {
         const subject = await prisma.admissionFee.create({
             data: {...data}
