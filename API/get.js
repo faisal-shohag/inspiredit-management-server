@@ -358,9 +358,9 @@ router.get("/accounts", async(req, res) => {
     }
 })
 
-router.get("/accounts", async (req, res) => {
+router.get("/accountsByDate", async (req, res) => {
   const { startDate, endDate } = req.query;
-
+  console.log(startDate, endDate)
   try {
     const accounts = await prisma.account.findMany({
       where: {
@@ -373,8 +373,9 @@ router.get("/accounts", async (req, res) => {
 
     res.status(200).json(accounts);
   } catch (err) {
-    res.status(400).json({ err: err.message });
     console.log(err);
+    res.status(400).json({ err: err.message });
+   
   }
 });
 
