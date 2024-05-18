@@ -153,8 +153,10 @@ router.get("/student/:id", async(req, res) => {
       let regularfees = []
       let total_regular_fee = 0
       let subtotal_regular_fee = 0
+      let only_regular_fee = 0
       for(let i=0; i<student.regularFee.length; i++) {
         total_regular_fee = (student.regularFee[i].regular_fee + student.regularFee[i].fine + student.regularFee[i].transport_fee + student.regularFee[i].others_fee + student.regularFee[i].books_fee + student.regularFee[i].uniform_fee  + student.regularFee[i].id_card_fee) - student.regularFee[i].discount_fee
+        only_regular_fee += (student.regularFee[i].regular_fee)
         regularfees.push({
           ...student.regularFee[i],
           total: total_regular_fee
@@ -177,7 +179,7 @@ router.get("/student/:id", async(req, res) => {
 
       student["regularFee"] = regularfees
       student["admissionFee"] = admissionfees
-      student["due"] =  student.class.fee - (subtotal_admission_fee + subtotal_regular_fee)
+      student["due"] =  student.class.fee - (subtotal_admission_fee + only_regular_fee)
 
       res.status(200).json(student);
     } catch (err) {
@@ -189,7 +191,7 @@ router.get("/student/:id", async(req, res) => {
 
 //get teacher by id_no
 router.get("/teacher/:id", async(req, res) => {
-  const id = parseInt(req.params.id)
+  const id = req.params.id
   try {
       let teacher = await prisma.teacher.findUnique({
         where: {
@@ -216,7 +218,7 @@ router.get("/teacher/:id", async(req, res) => {
 
 //get staff by id_no
 router.get("/staff/:id", async(req, res) => {
-  const id = parseInt(req.params.id)
+  const id = req.params.id
   try {
       let staff = await prisma.staff.findUnique({
         where: {
@@ -244,8 +246,9 @@ router.get("/sections", async(req, res) => {
       });
       res.status(200).json(section);
     } catch (err) {
-      res.status(400).json({ err: err });
       console.log(err);
+      res.status(400).json({ err: err });
+     
     }
 })
 
@@ -259,8 +262,9 @@ router.get("/classes", async(req, res) => {
       });
       res.status(200).json(_class);
     } catch (err) {
-      res.status(400).json({ err: err });
       console.log(err);
+      res.status(400).json({ err: err });
+      
     }
 })
 
@@ -296,8 +300,9 @@ router.get("/class/:id", async(req, res) => {
       });
       res.status(200).json(_class);
     } catch (err) {
-      res.status(400).json({ err: err });
       console.log(err);
+      res.status(400).json({ err: err });
+      
     }
 })
 
@@ -330,8 +335,9 @@ router.get("/class/attendance/:classId/:date", async(req, res) => {
       });
       res.status(200).json(attendance);
     } catch (err) {
-      res.status(400).json({ err: err });
       console.log(err);
+      res.status(400).json({ err: err });
+      
     }
 })
 
@@ -343,8 +349,9 @@ router.get("/settings", async(req, res) => {
       });
       res.status(200).json(settings);
     } catch (err) {
-      res.status(400).json({ err: err });
       console.log(err);
+      res.status(400).json({ err: err });
+     
     }
 })
 
@@ -354,8 +361,9 @@ router.get("/accounts", async(req, res) => {
       const accounts = await prisma.account.findMany({});
       res.status(200).json(accounts);
     } catch (err) {
-      res.status(400).json({ err: err });
       console.log(err);
+      res.status(400).json({ err: err });
+      
     }
 })
 
@@ -374,8 +382,50 @@ router.get("/accounts", async (req, res) => {
 
     res.status(200).json(accounts);
   } catch (err) {
-    res.status(400).json({ err: err.message });
     console.log(err);
+    res.status(400).json({ err: err.message });
+  }
+});
+
+
+router.get("/salaries", async (req, res) => {
+  const { startDate, endDate } = req.query;
+
+  try {
+    const salary = await prisma.salary.findMany({
+      where: {
+        date: {
+          gte: new Date(startDate),
+          lte: new Date(endDate)
+        }
+      }
+    });
+
+    res.status(200).json(salary);
+  } catch (err) {
+    console.log(err)
+    res.status(400).json({ err: err.message });
+  }
+});
+
+
+router.get("/transactions", async (req, res) => {
+  const { startDate, endDate } = req.query;
+
+  try {
+    const transactions = await prisma.transactions.findMany({
+      where: {
+        date: {
+          gte: new Date(startDate),
+          lte: new Date(endDate)
+        }
+      }
+    });
+
+    res.status(200).json(transactions);
+  } catch (err) {
+    console.log(err)
+    res.status(400).json({ err: err.message });
   }
 });
 
