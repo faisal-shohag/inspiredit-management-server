@@ -358,6 +358,26 @@ router.get("/accounts", async(req, res) => {
     }
 })
 
+router.get("/accounts", async (req, res) => {
+  const { startDate, endDate } = req.query;
+
+  try {
+    const accounts = await prisma.account.findMany({
+      where: {
+        date: {
+          gte: new Date(startDate),
+          lte: new Date(endDate)
+        }
+      }
+    });
+
+    res.status(200).json(accounts);
+  } catch (err) {
+    res.status(400).json({ err: err.message });
+    console.log(err);
+  }
+});
+
 
 router.get('/image2/:folder/:file', (req, res) => {
   const folder = req.params.folder
