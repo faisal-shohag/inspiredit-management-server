@@ -67,9 +67,9 @@ router.post('/staff_add', async(req, res) => {
 router.post('/admission_fee', async(req, res) => {
     const data = req.body
     const transactions = await prisma.transactions.create({
-        data: {...data}
+        data: {amount: (data.fee + data.other) - discount, name: 'Addmission Fee', type: 'income'}
     })
-    console.log(transactions)
+    // console.log(transactions)
     try {
         const subject = await prisma.admissionFee.create({
             data: {...data}
@@ -151,6 +151,9 @@ router.post('/settings_add', async(req, res) => {
 
 router.post('/regular_fee', async(req, res) => {
     const data = req.body
+    const transactions = await prisma.transactions.create({
+        data: {amount: (data.regular_fee + data.others_fee + data.id_card_fee) - data.discount_fee, name: 'Regular Fee', type: 'income'}
+    })
     try {
         const fee = await prisma.regularFee.create({
             data: {...data}
@@ -164,10 +167,32 @@ router.post('/regular_fee', async(req, res) => {
     }
 })
 
+
+router.post('/salary_add/:employee', async(req, res) => {
+    const data = req.body
+    const employee = req.params.employee
+    const transactions = await prisma.transactions.create({
+        data: {amount: data.monthly_salary + data.bonus, name: `${employee} Salary`, type: 'expense'}
+    })
+    try {
+        const salary = await prisma.salary.create({
+            data: {...data}
+        })
+        res.status(200).json({success: true, created: salary})
+    } catch (error) {
+        console.log(error)
+        if(error.code == "P2002") 
+           res.status(403).send({err: ""})
+        else res.status(400).json({err: "error"})
+    }
+})
+
 //add staff salary
 router.post('/staff_salary_add', async(req, res) => {
     const data = req.body
-    console.log(data)
+    const transactions = await prisma.transactions.create({
+        data: {amount: data.monthly_salary + data.bonus, name: 'Staff Salary', type: 'expense'}
+    })
     try {
         const salary = await prisma.staffSalary.create({
             data: {...data}
@@ -184,7 +209,9 @@ router.post('/staff_salary_add', async(req, res) => {
 //add teacher salary
 router.post('/teacher_salary_add', async(req, res) => {
     const data = req.body
-    console.log(data)
+    const transactions = await prisma.transactions.create({
+        data: {amount: data.monthly_salary + data.bonus, name: 'Teacher Salary', type: 'expense'}
+    })
     try {
         const salary = await prisma.teacherSalary.create({
             data: {...data}

@@ -52,7 +52,7 @@ model Teacher {
   classes           ClassesAndTeachers[]
   subjects          Subject[]
   attendance        TeacherAttendence[]
-  salary            TeacherSalary[]
+  salary            Salary[]
 }
 
 model ClassesAndTeachers {
@@ -206,26 +206,38 @@ model Staff {
   id_no             String               @unique
   name              String
   attendance        StaffAttendance[]
-  salary            StaffSalary[]
+  salary            Salary[]
+
 }
 
-model TeacherSalary {
-  id             Int      @id @default(autoincrement())
+model Salary {
+   id             Int      @id @default(autoincrement())
   monthly_salary Int      @default(0)
   bonus          Int      @default(0)
-  teacherId      Int
+  teacherId      Int?
   paid_date      DateTime @default(now())
-  teacher        Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  teacher        Teacher?  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  staff          Staff?   @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  staffId        Int?
 }
 
-model StaffSalary {
-  id             Int      @id @default(autoincrement())
-  monthly_salary Int      @default(0)
-  bonus          Int      @default(0)
-  staffId        Int
-  paid_date      DateTime @default(now())
-  staff          Staff   @relation(fields: [staffId], references: [id], onDelete: Cascade)
-}
+// model TeacherSalary {
+//   id             Int      @id @default(autoincrement())
+//   monthly_salary Int      @default(0)
+//   bonus          Int      @default(0)
+//   teacherId      Int
+//   paid_date      DateTime @default(now())
+//   teacher        Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+// }
+
+// model StaffSalary {
+//   id             Int      @id @default(autoincrement())
+//   monthly_salary Int      @default(0)
+//   bonus          Int      @default(0)
+//   staffId        Int
+//   paid_date      DateTime @default(now())
+//   staff          Staff   @relation(fields: [staffId], references: [id], onDelete: Cascade)
+// }
 
 model Settings {
   id            Int     @id @default(autoincrement())
