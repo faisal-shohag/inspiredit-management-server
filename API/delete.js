@@ -89,4 +89,20 @@ router.delete("/staff/:id", async (req, res) => {
   }
 });
 
+router.delete("/accounts/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  try {
+    const account = await prisma.account.delete({
+      where: {
+        id: id,
+      },
+    });
+    res.status(200).json(account);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ err: err });
+   
+  }
+});
+
 export default router;

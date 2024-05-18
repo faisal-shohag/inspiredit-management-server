@@ -48,7 +48,7 @@ model Teacher {
   created_at        DateTime             @default(now())
   isLeave           Boolean              @default(false)
   parmanent_address String?
-  id_no             Int                  @unique
+  id_no             String                  @unique
   classes           ClassesAndTeachers[]
   subjects          Subject[]
   attendance        TeacherAttendence[]
@@ -102,7 +102,7 @@ model Student {
   local_guardian_phone String?
   group                String?
   session              String?
-  id_no                Int                 @unique
+  id_no                String                 @unique
   image                String?
   gender               String
   date_of_birth        String
@@ -203,7 +203,7 @@ model Staff {
   education         String
   blood_group       String?
   created_at        DateTime          @default(now())
-  id_no             Int               @unique
+  id_no             String               @unique
   name              String
   attendance        StaffAttendance[]
   salary            StaffSalary[]
@@ -215,16 +215,16 @@ model TeacherSalary {
   bonus          Int      @default(0)
   teacherId      Int
   paid_date      DateTime @default(now())
-  teacher        Teacher  @relation(fields: [teacherId], references: [id_no], onDelete: Cascade)
+  teacher        Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
 }
 
 model StaffSalary {
   id             Int      @id @default(autoincrement())
   monthly_salary Int      @default(0)
   bonus          Int      @default(0)
-  staffId        Int?
+  staffId        Int
   paid_date      DateTime @default(now())
-  staff          Staff?   @relation(fields: [staffId], references: [id_no], onDelete: Cascade)
+  staff          Staff   @relation(fields: [staffId], references: [id], onDelete: Cascade)
 }
 
 model Settings {
