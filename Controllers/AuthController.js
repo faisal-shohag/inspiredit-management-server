@@ -34,7 +34,7 @@ const admin_login = async (req, res) => {
     try {
         const admin = await find_admin(email, password)
         const token = createToken(admin.id)
-        res.cookie('jwt_admin', token, {httpOnly: true, maxAge: maxAge * 1000, sameSite:"none"})
+        res.cookie('jwt_admin', token, {httpOnly: true, maxAge: maxAge * 1000, sameSite:"none", secure: true})
         res.status(200).json({...admin})
     } catch (error) {
         console.log(error)
