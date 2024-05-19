@@ -408,7 +408,11 @@ router.get("/salaries", async (req, res) => {
         date: {
           gte: new Date(startDate),
           lte: new Date(endDate)
-        }
+        },
+      },
+      include: {
+        staff: true,
+        teacher: true,
       }
     });
 
@@ -433,6 +437,23 @@ router.get("/transactions", async (req, res) => {
       }
     });
 
+    res.status(200).json(transactions);
+  } catch (err) {
+    console.log(err)
+    res.status(400).json({ err: err.message });
+  }
+});
+
+router.get("/transactions/all", async (req, res) => {
+  const { startDate, endDate } = req.query;
+
+  try {
+    const transactions = await prisma.transactions.findMany({
+      orderBy: {
+        date: 'desc',
+      },
+      take: 10
+    });
     res.status(200).json(transactions);
   } catch (err) {
     console.log(err)
@@ -550,6 +571,8 @@ router.get('/transactions/with-month', async (req, res) => {
     res.status(500).json({ error: 'Error fetching transactions' });
   }
 });
+
+
 
 
 

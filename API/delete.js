@@ -39,7 +39,7 @@ router.delete("/class/:id", async (req, res) => {
 });
 
 router.delete("/student/:id", async (req, res) => {
-  const id = parseInt(req.params.id);
+  const id = req.params.id
   try {
     const student = await prisma.student.delete({
       where: {
@@ -56,7 +56,7 @@ router.delete("/student/:id", async (req, res) => {
 });
 
 router.delete("/teacher/:id", async (req, res) => {
-  const id = parseInt(req.params.id);
+  const id = req.params.id
   try {
     const teacher = await prisma.teacher.delete({
       where: {
@@ -73,7 +73,7 @@ router.delete("/teacher/:id", async (req, res) => {
 });
 
 router.delete("/staff/:id", async (req, res) => {
-  const id = parseInt(req.params.id);
+  const id = req.params.id
   try {
     const staff = await prisma.staff.delete({
       where: {

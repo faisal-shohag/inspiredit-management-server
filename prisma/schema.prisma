@@ -107,7 +107,7 @@ model Student {
   gender               String
   date_of_birth        String
   blood_group          String?
-  admission_date       DateTime?
+  admission_date       DateTime?     @default(now())
   created_at           DateTime            @default(now())
   classId              Int
   sectionId            Int?
@@ -129,6 +129,7 @@ model AdmissionFee {
   other          Float    @default(0)
   readmission    Boolean  @default(false)
   student        Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  transaction    Transactions[]
 }
 
 model RegularFee {
@@ -145,6 +146,7 @@ model RegularFee {
   uniform_fee    Float    @default(0)
   due            Float    @default(0)
   student        Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  transaction    Transactions[]
 }
 
 model Section {
@@ -219,6 +221,7 @@ model Salary {
   teacher        Teacher?  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
   staff          Staff?   @relation(fields: [staffId], references: [id], onDelete: Cascade)
   staffId        Int?
+  transaction Transactions[]
 }
 
 // model TeacherSalary {
@@ -258,6 +261,7 @@ model Account {
   check_number     String?
   purpose          String?
   transaction_type String?
+  transaction Transactions[]
 }
 
 model Transactions {
@@ -266,4 +270,12 @@ model Transactions {
   date   DateTime @default(now())
   name   String
   type   String
+  accountId Int? 
+  salaryId Int?
+  admissionFeeId Int?
+  regularFeeId Int?
+  account Account? @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  salary Salary? @relation(fields: [salaryId], references: [id], onDelete: Cascade)
+  admissionFee AdmissionFee? @relation(fields: [admissionFeeId], references: [id], onDelete: Cascade)
+  regularFee RegularFee? @relation(fields: [regularFeeId], references: [id], onDelete: Cascade)
 }
