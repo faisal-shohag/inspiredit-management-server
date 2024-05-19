@@ -7,6 +7,17 @@ import { fileURLToPath } from 'url';
 import fs from 'fs'
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename); 
+import {format, parseISO, startOfMonth, endOfMonth} from 'date-fns';
+
+const getMonthName = (dateString) => {
+  const date = new Date(dateString).toString();
+  const month = new Date(date).getMonth();
+  const year = new Date(date).getFullYear();  
+  return {
+    month: year+'-'+month,
+    name: date.split(' ')[1]
+  }
+};
 
 //all teachers
 router.get("/teachers", async(req, res) => {
@@ -428,6 +439,120 @@ router.get("/transactions", async (req, res) => {
     res.status(400).json({ err: err.message });
   }
 });
+
+router.get('/transactions/total', async (req, res) => {
+  const now = new Date();
+  const startOfCurrentMonth = startOfMonth(now);
+  const endOfCurrentMonth = endOfMonth(now);
+
+  try {
+    const [totalIncome, totalExpense, monthlyIncome, monthlyExpense] = await Promise.all([
+      prisma.transactions.aggregate({
+        _sum: {
+          amount: true,
+        },
+        where: {
+          type: 'income',
+        },
+      }),
+      prisma.transactions.aggregate({
+        _sum: {
+          amount: true,
+        },
+        where: {
+          type: 'expense',
+        },
+      }),
+      prisma.transactions.aggregate({
+        _sum: {
+          amount: true,
+        },
+        where: {
+          type: 'income',
+          date: {
+            gte: startOfCurrentMonth,
+            lte: endOfCurrentMonth,
+          },
+        },
+      }),
+      prisma.transactions.aggregate({
+        _sum: {
+          amount: true,
+        },
+        where: {
+          type: 'expense',
+          date: {
+            gte: startOfCurrentMonth,
+            lte: endOfCurrentMonth,
+          },
+        },
+      }),
+    ]);
+
+    const totalIncomeAmount = totalIncome._sum.amount || 0;
+    const totalExpenseAmount = totalExpense._sum.amount || 0;
+    const netProfit = totalIncomeAmount - totalExpenseAmount;
+
+    const monthlyIncomeAmount = monthlyIncome._sum.amount || 0;
+    const monthlyExpenseAmount = monthlyExpense._sum.amount || 0;
+    const netProfitThisMonth = monthlyIncomeAmount - monthlyExpenseAmount;
+
+    res.json({
+      totalIncome: totalIncomeAmount,
+      totalExpense: totalExpenseAmount,
+      netProfit,
+      monthlyIncome: monthlyIncomeAmount,
+      monthlyExpense: monthlyExpenseAmount,
+      netProfitThisMonth,
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Error calculating totals' });
+  }
+});
+
+
+router.get('/transactions/with-month', async (req, res) => {
+  try {
+    const transactions = await prisma.transactions.findMany({
+      orderBy: {
+        date: 'desc',
+      },
+    });
+
+    const monthlyNetProfits = transactions.reduce((acc, transaction) => {
+      const {month, name}= getMonthName(transaction.date);
+      
+      if (!acc[month]) {
+        acc[month] = {
+          name,
+          income: 0,
+          expense: 0,
+        };
+      }
+
+      if (transaction.type === 'income') {
+        acc[month].income += transaction.amount;
+      } else if (transaction.type === 'expense') {
+        acc[month].expense += transaction.amount;
+      }
+
+      return acc;
+    }, {});
+
+    const result = Object.values(monthlyNetProfits).map(monthData => ({
+      month: monthData.name,
+      netProfit: monthData.income - monthData.expense,
+    }));
+
+    res.json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching transactions' });
+  }
+});
+
+
+
 
 
 router.get('/image2/:folder/:file', (req, res) => {
