@@ -20,7 +20,7 @@ const PORT = process.env.PORT || 5000
 
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: ['http://localhost:5173'],
   credentials: true,
 }))
 
@@ -41,13 +41,14 @@ app.get('/', (req, res) => {
   res.send("🚀 Working fine!")
 })
 
-app.use(authentication)
-app.use(isAdminAuth)
+
 // app.get('/faisal', (res, req) => {
 //   res.send('Hello!')
 // })
 app.use(get)
 app.use(counts)
+app.use(authentication)
+app.use(isAdminAuth)
 app.use(post)
 app.use(dlt)
 app.use(update)
