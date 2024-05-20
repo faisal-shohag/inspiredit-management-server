@@ -168,7 +168,7 @@ router.post('/regular_fee', async(req, res) => {
     } catch (error) {
         console.log(error)
         if(error.code == "P2002") 
-           res.status(403).send({err: ""})
+           res.status(403).send({err: true})
         else res.status(400).json({err: "error"})
     }
 })

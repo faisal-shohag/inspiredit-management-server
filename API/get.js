@@ -423,6 +423,35 @@ router.get("/salaries", async (req, res) => {
   }
 });
 
+router.get("/fees", async (req, res) => {
+  const { startDate, endDate } = req.query;
+
+  try {
+    const regular_fee = await prisma.regularFee.findMany({
+      where: {
+        collectionDate: {
+          gte: new Date(startDate),
+          lte: new Date(endDate)
+        },
+      },
+    });
+
+    const admission_fee = await prisma.admissionFee.findMany({
+      where: {
+        collectionDate: {
+          gte: new Date(startDate),
+          lte: new Date(endDate)
+        },
+      },
+    });
+
+    res.status(200).json({regular_fee, admission_fee});
+  } catch (err) {
+    console.log(err)
+    res.status(400).json({ err: err.message });
+  }
+});
+
 
 router.get("/transactions", async (req, res) => {
   const { startDate, endDate } = req.query;
