@@ -215,7 +215,7 @@ model Staff {
 model Salary {
    id             Int      @id @default(autoincrement())
   monthly_salary Int      @default(0)
-  bonus          Int      @default(0)
+  bonus          Int?      @default(0)
   teacherId      Int?
   paid_date      DateTime @default(now())
   teacher        Teacher?  @relation(fields: [teacherId], references: [id], onDelete: Cascade)

@@ -401,11 +401,12 @@ router.get("/accountsByDate", async (req, res) => {
 
 router.get("/salaries", async (req, res) => {
   const { startDate, endDate } = req.query;
+  console.log(startDate, endDate)
 
   try {
     const salary = await prisma.salary.findMany({
       where: {
-        date: {
+        paid_date: {
           gte: new Date(startDate),
           lte: new Date(endDate)
         },
