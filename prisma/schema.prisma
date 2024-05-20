@@ -149,6 +149,8 @@ model RegularFee {
   transaction    Transactions[]
 }
 
+
+
 model Section {
   id         Int                 @id @default(autoincrement())
   name       String?
