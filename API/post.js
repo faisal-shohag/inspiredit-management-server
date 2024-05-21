@@ -179,10 +179,10 @@ router.post('/salary_add/:employee', async(req, res) => {
     const employee = req.params.employee
     try {
         const salary = await prisma.salary.create({
-            data: {...data}
+            data: {...data, paid_date:new Date(data.paid_date)}
         })
         const transactions = await prisma.transactions.create({
-            data: {salaryId: salary.id, amount: data.monthly_salary + data.bonus, name: `${employee} Salary`, type: 'expense'}
+            data: {salaryId: salary.id, amount: data.monthly_salary + data.bonus, name: `${employee} Salary`, type: 'expense',date:new Date(data.paid_date)}
         })
         res.status(200).json({success: true, created: salary})
     } catch (error) {

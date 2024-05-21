@@ -48,11 +48,11 @@ model Teacher {
   created_at        DateTime             @default(now())
   isLeave           Boolean              @default(false)
   parmanent_address String?
-  id_no             String                  @unique
+  id_no             String               @unique
   classes           ClassesAndTeachers[]
+  salary            Salary[]
   subjects          Subject[]
   attendance        TeacherAttendence[]
-  salary            Salary[]
 }
 
 model ClassesAndTeachers {
@@ -102,12 +102,12 @@ model Student {
   local_guardian_phone String?
   group                String?
   session              String?
-  id_no                String                 @unique
+  id_no                String              @unique
   image                String?
   gender               String
   date_of_birth        String
   blood_group          String?
-  admission_date       DateTime?     @default(now())
+  admission_date       DateTime?           @default(now())
   created_at           DateTime            @default(now())
   classId              Int
   sectionId            Int?
@@ -121,35 +121,33 @@ model Student {
 }
 
 model AdmissionFee {
-  id             Int      @id @default(autoincrement())
-  fee            Float    @default(0)
-  discount       Float    @default(0)
-  collectionDate DateTime @default(now())
+  id             Int            @id @default(autoincrement())
+  fee            Float          @default(0)
+  discount       Float          @default(0)
+  collectionDate DateTime       @default(now())
   studentId      Int
-  other          Float    @default(0)
-  readmission    Boolean  @default(false)
-  student        Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  other          Float          @default(0)
+  readmission    Boolean        @default(false)
+  student        Student        @relation(fields: [studentId], references: [id], onDelete: Cascade)
   transaction    Transactions[]
 }
 
 model RegularFee {
-  id             Int      @id @default(autoincrement())
-  fine           Float    @default(0)
+  id             Int            @id @default(autoincrement())
+  fine           Float          @default(0)
   studentId      Int
-  collectionDate DateTime @default(now())
-  books_fee      Float    @default(0)
-  discount_fee   Float    @default(0)
-  id_card_fee    Float    @default(0)
-  others_fee     Float    @default(0)
+  collectionDate DateTime       @default(now())
+  books_fee      Float          @default(0)
+  discount_fee   Float          @default(0)
+  id_card_fee    Float          @default(0)
+  others_fee     Float          @default(0)
   regular_fee    Float
-  transport_fee  Float    @default(0)
-  uniform_fee    Float    @default(0)
-  due            Float    @default(0)
-  student        Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  transport_fee  Float          @default(0)
+  uniform_fee    Float          @default(0)
+  due            Float          @default(0)
+  student        Student        @relation(fields: [studentId], references: [id], onDelete: Cascade)
   transaction    Transactions[]
 }
-
-
 
 model Section {
   id         Int                 @id @default(autoincrement())
@@ -207,42 +205,23 @@ model Staff {
   education         String
   blood_group       String?
   created_at        DateTime          @default(now())
-  id_no             String               @unique
+  id_no             String            @unique
   name              String
-  attendance        StaffAttendance[]
   salary            Salary[]
-
+  attendance        StaffAttendance[]
 }
 
 model Salary {
-   id             Int      @id @default(autoincrement())
-  monthly_salary Int      @default(0)
-  bonus          Int?      @default(0)
+  id             Int            @id @default(autoincrement())
+  monthly_salary Int            @default(0)
+  bonus          Int?           @default(0)
   teacherId      Int?
-  paid_date      DateTime @default(now())
-  teacher        Teacher?  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
-  staff          Staff?   @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  paid_date      DateTime       @default(now())
   staffId        Int?
-  transaction Transactions[]
+  staff          Staff?         @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  teacher        Teacher?       @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  transaction    Transactions[]
 }
-
-// model TeacherSalary {
-//   id             Int      @id @default(autoincrement())
-//   monthly_salary Int      @default(0)
-//   bonus          Int      @default(0)
-//   teacherId      Int
-//   paid_date      DateTime @default(now())
-//   teacher        Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
-// }
-
-// model StaffSalary {
-//   id             Int      @id @default(autoincrement())
-//   monthly_salary Int      @default(0)
-//   bonus          Int      @default(0)
-//   staffId        Int
-//   paid_date      DateTime @default(now())
-//   staff          Staff   @relation(fields: [staffId], references: [id], onDelete: Cascade)
-// }
 
 model Settings {
   id            Int     @id @default(autoincrement())
@@ -256,28 +235,28 @@ model Settings {
 }
 
 model Account {
-  id               Int      @id @default(autoincrement())
+  id               Int            @id @default(autoincrement())
   type             String?
-  date             DateTime @default(now())
+  date             DateTime       @default(now())
   amount           Int
   check_number     String?
   purpose          String?
   transaction_type String?
-  transaction Transactions[]
+  transaction      Transactions[]
 }
 
 model Transactions {
-  id     Int      @id @default(autoincrement())
-  amount Float    @default(0)
-  date   DateTime @default(now())
-  name   String
-  type   String
-  accountId Int? 
-  salaryId Int?
+  id             Int           @id @default(autoincrement())
+  amount         Float         @default(0)
+  date           DateTime      @default(now())
+  name           String
+  type           String
+  accountId      Int?
   admissionFeeId Int?
-  regularFeeId Int?
-  account Account? @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  salary Salary? @relation(fields: [salaryId], references: [id], onDelete: Cascade)
-  admissionFee AdmissionFee? @relation(fields: [admissionFeeId], references: [id], onDelete: Cascade)
-  regularFee RegularFee? @relation(fields: [regularFeeId], references: [id], onDelete: Cascade)
+  regularFeeId   Int?
+  salaryId       Int?
+  account        Account?      @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  admissionFee   AdmissionFee? @relation(fields: [admissionFeeId], references: [id], onDelete: Cascade)
+  regularFee     RegularFee?   @relation(fields: [regularFeeId], references: [id], onDelete: Cascade)
+  salary         Salary?       @relation(fields: [salaryId], references: [id], onDelete: Cascade)
 }
