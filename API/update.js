@@ -40,7 +40,7 @@ router.put('/readmission/:id', async(req, res) => {
             data: {...data}
         })
         // mailToStudent(student)
-        res.status(200).json({success: true, created: student})
+        res.status(200).json({success: true, updated: student})
     } catch (error) {
         console.log(error)
         if(error.code == "P2002") 
@@ -60,7 +60,7 @@ router.put('/student_update/:id', async(req, res) => {
             },
             data: {...data}
         })
-        res.status(200).json({success: true, created: student})
+        res.status(200).json({success: true, updated: student})
     } catch (error) {
         console.log(error)
         if(error.code == "P2002") 
@@ -68,6 +68,73 @@ router.put('/student_update/:id', async(req, res) => {
          else res.status(400).json({err: "Something went wrong! Did you filled all the fields!"})
     }
 })
+
+
+//teacher update
+router.put('/teacher_update/:id', async(req, res) => {
+    const data = req.body
+    const id = parseInt(req.params.id)
+    // console.log(data)
+    try {
+        const teacher = await prisma.teacher.update({
+            where: {
+                id: id
+            },
+            data: {...data}
+        })
+        res.status(200).json({success: true, updated: teacher})
+    } catch (error) {
+        console.log(error)
+        if(error.code == "P2002") 
+            res.status(403).send({err: "Student with this email already been created!"})
+         else res.status(400).json({err: "Something went wrong! Did you filled all the fields!"})
+    }
+})
+
+
+//staff update
+router.put('/staff_update/:id', async(req, res) => {
+    const data = req.body
+    const id = parseInt(req.params.id)
+    // console.log(data)
+    try {
+        const staff = await prisma.staff.update({
+            where: {
+                id: id
+            },
+            data: {...data}
+        })
+        res.status(200).json({success: true, updated: staff})
+    } catch (error) {
+        console.log(error)
+        if(error.code == "P2002") 
+            res.status(403).send({err: "Student with this email already been created!"})
+         else res.status(400).json({err: "Something went wrong! Did you filled all the fields!"})
+    }
+})
+
+
+router.put('/class_update/:id', async(req, res) => {
+    const data = req.body
+    const id = parseInt(req.params.id)
+    // console.log(data)
+    try {
+        const _class = await prisma.class.update({
+            where: {
+                id: id
+            },
+            data: {...data}
+        })
+        res.status(200).json({success: true, updated: _class})
+    } catch (error) {
+        console.log(error)
+        if(error.code == "P2002") 
+            res.status(403).send({err: "Student with this email already been created!"})
+         else res.status(400).json({err: "Something went wrong! Did you filled all the fields!"})
+    }
+})
+
+
 
 //setting update
 router.put('/settings_update/:id', async(req, res) => {
@@ -81,7 +148,7 @@ router.put('/settings_update/:id', async(req, res) => {
                 id: id
             }
         })
-        res.status(200).json({success: true, created: subject})
+        res.status(200).json({success: true, updated: subject})
     } catch (error) {
         // sendError(res, error)
         if(error.code == "P2002") 
@@ -106,7 +173,7 @@ router.put('/class/attendance/:attendanceId/:studentId/:date', async(req, res) =
                 date: date
             }
         })
-        res.status(200).json({success: true, created: attendance})
+        res.status(200).json({success: true, updated: attendance})
     } catch (error) {
        console.log(error)
         if(error.code == "P2002") 

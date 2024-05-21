@@ -129,6 +129,7 @@ model AdmissionFee {
   other          Float          @default(0)
   readmission    Boolean        @default(false)
   student        Student        @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  incharge       String?
   transaction    Transactions[]
 }
 
@@ -145,6 +146,7 @@ model RegularFee {
   transport_fee  Float          @default(0)
   uniform_fee    Float          @default(0)
   due            Float          @default(0)
+  incharge       String?
   student        Student        @relation(fields: [studentId], references: [id], onDelete: Cascade)
   transaction    Transactions[]
 }
@@ -220,6 +222,7 @@ model Salary {
   staffId        Int?
   staff          Staff?         @relation(fields: [staffId], references: [id], onDelete: Cascade)
   teacher        Teacher?       @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  incharge       String?
   transaction    Transactions[]
 }
 
@@ -242,6 +245,7 @@ model Account {
   check_number     String?
   purpose          String?
   transaction_type String?
+  incharge       String?
   transaction      Transactions[]
 }
 
