@@ -115,7 +115,7 @@ router.post('/section_add', async(req, res) => {
     const data = req.body
     try {
         const section = await prisma.section.create({
-            data: {...data, classId: parseInt(data.classId)}
+            data: {...data, classId: parseInt(data.classId), name: (data.name).toString()}
         })
         res.status(200).json({success: true, created: section})
     } catch (error) {
