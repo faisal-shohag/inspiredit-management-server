@@ -174,24 +174,58 @@ router.post('/regular_fee', async(req, res) => {
 })
 
 
-router.post('/salary_add/:employee', async(req, res) => {
-    const data = req.body
-    const employee = req.params.employee
+router.post('/salary_add/:employee', async (req, res) => {
+    const data = req.body;
+    const employee = req.params.employee;
+    const paidDate = new Date(data.paid_date);
+    const year = paidDate.getFullYear();
+    const month = paidDate.getMonth() + 1; // JavaScript months are 0-indexed
+    console.log(data)
+    
     try {
+        // Check if salary already exists for this employee and month
+        const employeeField = data.teacherId ? 'teacherId' : 'staffId';
+        const existingSalary = await prisma.salary.findFirst({
+            where: {
+                [employeeField]: data[employeeField],
+                paid_date: {
+                    gte: new Date(year, month - 1, 1),
+                    lt: new Date(year, month, 1)
+                }
+            }
+        });
+
+        if (existingSalary) {
+            return res.status(409).json({ err: "Salary already exists for this employee and month" });
+        }
+
+        // Create new salary record
         const salary = await prisma.salary.create({
-            data: {...data, paid_date:new Date(data.paid_date)}
-        })
+            data: { ...data, paid_date: paidDate }
+        });
+
+        // Create new transaction record
         const transactions = await prisma.transactions.create({
-            data: {salaryId: salary.id, amount: data.monthly_salary + data.bonus, name: `${employee} Salary`, type: 'expense',date:new Date(data.paid_date)}
-        })
-        res.status(200).json({success: true, created: salary})
+            data: {
+                salaryId: salary.id,
+                amount: data.monthly_salary + data.bonus,
+                name: `${employee} Salary`,
+                type: 'expense',
+                date: paidDate
+            }
+        });
+
+        res.status(200).json({ success: true, created: salary });
     } catch (error) {
-        console.log(error)
-        if(error.code == "P2002") 
-           res.status(403).send({err: ""})
-        else res.status(400).json({err: "error"})
+        console.log(error);
+        if (error.code === "P2002") {
+            res.status(403).send({ err: "Unique constraint failed" });
+        } else {
+            res.status(400).json({ err: "An error occurred" });
+        }
     }
-})
+});
+
 
 //add staff salary
 // router.post('/staff_salary_add', async(req, res) => {

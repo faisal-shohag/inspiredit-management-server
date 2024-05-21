@@ -270,6 +270,9 @@ router.get("/classes", async(req, res) => {
           sections: true,
           subject: true,
         },
+        orderBy: {
+          name: 'asc'
+        }
       });
       res.status(200).json(_class);
     } catch (err) {
@@ -369,7 +372,11 @@ router.get("/settings", async(req, res) => {
 
 router.get("/accounts", async(req, res) => {
   try {
-      const accounts = await prisma.account.findMany({});
+      const accounts = await prisma.account.findMany({
+        orderBy: {
+          date: 'desc'
+        }
+      });
       res.status(200).json(accounts);
     } catch (err) {
       console.log(err);
@@ -388,6 +395,9 @@ router.get("/accountsByDate", async (req, res) => {
           gte: new Date(startDate),
           lte: new Date(endDate)
         }
+      },
+      orderBy: {
+        date: 'desc'
       }
     });
 
@@ -414,6 +424,9 @@ router.get("/salaries", async (req, res) => {
       include: {
         staff: true,
         teacher: true,
+      },
+      orderBy: {
+        paid_date: 'desc'
       }
     });
 
@@ -435,6 +448,9 @@ router.get("/fees", async (req, res) => {
           lte: new Date(endDate)
         },
       },
+      orderBy: {
+        collectionDate: 'desc'
+      }
     });
 
     const admission_fee = await prisma.admissionFee.findMany({
@@ -444,6 +460,9 @@ router.get("/fees", async (req, res) => {
           lte: new Date(endDate)
         },
       },
+      orderBy: {
+        collectionDate: 'desc'
+      }
     });
 
     res.status(200).json({regular_fee, admission_fee});
