@@ -51,12 +51,12 @@ router.put('/readmission/:id', async(req, res) => {
 
 router.put('/student_update/:id', async(req, res) => {
     const data = req.body
-    const id = parseInt(req.params.id)
+    const id = req.params.id
     // console.log(data)
     try {
         const student = await prisma.student.update({
             where: {
-                id: id
+                id_no: id
             },
             data: {...data}
         })
@@ -116,6 +116,7 @@ router.put('/staff_update/:id', async(req, res) => {
 
 router.put('/class_update/:id', async(req, res) => {
     const data = req.body
+    
     const id = parseInt(req.params.id)
     // console.log(data)
     try {
@@ -123,7 +124,7 @@ router.put('/class_update/:id', async(req, res) => {
             where: {
                 id: id
             },
-            data: {...data}
+            data: {...data, fee: parseInt(data.fee)}
         })
         res.status(200).json({success: true, updated: _class})
     } catch (error) {
