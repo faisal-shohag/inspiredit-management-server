@@ -160,7 +160,7 @@ router.get("/student/:id", async(req, res) => {
           attendance: true,
         }
       });
-      console.log(student)
+      //console.log(student)
       let regularfees = []
       let total_regular_fee = 0
       let subtotal_regular_fee = 0
