@@ -60,7 +60,9 @@ const check_admin_login = async (req, res) => {
     // console.log(token)
     if(token) {
         jwt.verify(token, process.env.JWT_SECRET, (err) => {
-            if(err) res.status(201).json({loggedIn: false})
+            if(err){ 
+                res.cookie('jwt_admin', '', {httpOnly: true, maxAge: 1})
+                res.status(201).json({loggedIn: false})}
         })
 
         const decode = jwt.verify(token, process.env.JWT_SECRET)
@@ -69,10 +71,12 @@ const check_admin_login = async (req, res) => {
             const admin = await find_admin_only_with_id(decode.id)
             res.status(200).json({...admin, loggedIn: true})
         } catch (error) {
+            res.cookie('jwt_admin', '', {httpOnly: true, maxAge: 1})
             res.status(201).json({loggedIn: false})
         }
 
     } else {
+        res.cookie('jwt_admin', '', {httpOnly: true, maxAge: 1})
         res.status(201).json({loggedIn: false})
     }
 }

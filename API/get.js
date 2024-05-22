@@ -26,6 +26,9 @@ router.get("/teachers", async(req, res) => {
           include: {
             attendance: true
           },
+          orderBy: {
+            id_no: 'asc',
+          }
         });
         res.status(200).json(teacher);
       } catch (err) {
@@ -73,6 +76,9 @@ router.get("/staffs", async(req, res) => {
         include: {
           attendance: true
         },
+        orderBy: {
+          id_no: 'asc',
+        }
       });
       res.status(200).json(staff);
     } catch (err) {
@@ -80,6 +86,37 @@ router.get("/staffs", async(req, res) => {
       console.log(err);
     }
 })
+
+// Student Pagination
+router.get("/students_per_page", async (req, res) => {
+  try {
+    const { page = 1, limit = 10 } = req.query;
+
+    const students = await prisma.student.findMany({
+      include: {
+        section: true,
+        class: true,
+        attendance: true,
+      },
+      orderBy: {
+        id_no: 'asc',
+      },
+      skip: (page - 1) * limit,
+      take: parseInt(limit),
+    });
+
+    const totalStudents = await prisma.student.count();
+
+    res.status(200).json({
+      students,
+      totalPages: Math.ceil(totalStudents / limit),
+      currentPage: parseInt(page),
+    });
+  } catch (err) {
+    res.status(400).json({ err: err.message });
+    console.log(err);
+  }
+});
 
 
 //all students
