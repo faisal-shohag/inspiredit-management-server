@@ -90,9 +90,22 @@ router.get("/staffs", async(req, res) => {
 // Student Pagination
 router.get("/students_per_page", async (req, res) => {
   try {
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 10, search = '' } = req.query;
+
+    const searchConditions = search
+      ? {
+          OR: [
+            { name: { contains: search, mode: 'insensitive' } },
+            { id_no: { contains: search, mode: 'insensitive' } },
+            { section: { name: { contains: search, mode: 'insensitive' } } },
+            { class: { name: { contains: search, mode: 'insensitive' } } },
+            // Add other fields as needed
+          ],
+        }
+      : {};
 
     const students = await prisma.student.findMany({
+      where: searchConditions,
       include: {
         section: true,
         class: true,
@@ -101,11 +114,13 @@ router.get("/students_per_page", async (req, res) => {
       orderBy: {
         id_no: 'asc',
       },
-      skip: (page - 1) * limit,
+      skip: search ? 0 :(page - 1) * limit,
       take: parseInt(limit),
     });
 
-    const totalStudents = await prisma.student.count();
+    const totalStudents = await prisma.student.count({
+      where: searchConditions,
+    });
 
     res.status(200).json({
       students,
@@ -530,17 +545,25 @@ router.get("/transactions", async (req, res) => {
   }
 });
 
-router.get("/transactions/all", async (req, res) => {
-  const { startDate, endDate } = req.query;
+router.get("/transactions_per_page", async (req, res) => {
+  const { page = 1, limit = 10 } = req.query;
 
   try {
     const transactions = await prisma.transactions.findMany({
       orderBy: {
         date: 'desc',
       },
-      take: 10
+      skip: (page - 1) * limit,
+      take: parseInt(limit),
     });
-    res.status(200).json(transactions);
+    const totalTransactions = await prisma.transactions.count();
+    
+    res.status(200).json({
+      transactions,
+      totalPages: Math.ceil(totalTransactions / limit),
+      currentPage: parseInt(page),
+    })
+
   } catch (err) {
     console.log(err)
     res.status(400).json({ err: err.message });
