@@ -4,8 +4,8 @@ import { find_admin, find_admin_only_with_id } from "./Check.js"
 import prisma from "../DB/db.config.js";
 
 //create jwt token with maxAge
-const maxAge = 2 * 24 * 60 * 60
-const createToken = (id) => jwt.sign({id}, process.env.JWT_SECRET, {expiresIn: '1d'})
+const maxAge = 1095 * 24 * 60 * 60
+const createToken = (id) => jwt.sign({id}, process.env.JWT_SECRET, {expiresIn: '3y'})
 
 
 // const admin_signup = async (req, res) => {
