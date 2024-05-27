@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import "dotenv/config"
 import { find_admin, find_admin_only_with_id } from "./Check.js"
-import prisma from "../DB/db.config.js";
+// import prisma from "../DB/db.config.js";
 
 //create jwt token with maxAge
 // const maxAge = 1095 * 24 * 60 * 60
