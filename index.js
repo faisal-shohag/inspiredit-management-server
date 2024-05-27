@@ -20,7 +20,7 @@ const PORT = process.env.PORT || 5000
 
 
 app.use(cors({
-  origin: ['http://localhost:5173', 'https://inspiredit.netlify.app'],
+  origin: ['http://localhost:5173', 'https://inspiredit.netlify.app', 'https://office-manage.inspiredinteriorbd.com'],
   credentials: true,
 }))
 
