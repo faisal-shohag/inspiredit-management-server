@@ -6,7 +6,7 @@ import path from 'path';
 const router = Router();
 
 const deleteImageFile = (fileNameWithoutExtension, dir) => {
-  const directoryPath = `resources/${dir}/`;
+  const directoryPath = `/${dir}/`;
   fs.readdir(directoryPath, (err, files) => {
     if (err) {
       console.error("Error reading directory:", err);

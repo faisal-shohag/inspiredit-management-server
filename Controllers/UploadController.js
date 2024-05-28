@@ -18,11 +18,11 @@ import fs from 'fs';
 const Storage = (dir) => {
     const storage = multer.diskStorage({
         destination: (req, file, cb) => {
-            cb(null, `resources/${dir}/`);
+            cb(null, `/${dir}/`);
         },
         filename: (req, file, cb) => {
             const fileNameWithoutExtension = file.originalname.replace(/\.[^/.]+$/, "");
-            const directoryPath = `resources/${dir}/`;
+            const directoryPath = `/${dir}/`;
             
             // Get a list of files in the destination directory
             fs.readdir(directoryPath, (err, files) => {

@@ -64,8 +64,12 @@ const check_admin_login = async (req, res) => {
     if (token) {
         try {
             var decoded = jwt.verify(token, process.env.JWT_SECRET)
-            res.status(200).json({loggedIn: true });
-            console.log(decoded);
+            try {
+                let admin = await find_admin_only_with_id(decoded.id);
+                res.status(200).json({...admin, loggedIn: true });
+            } catch (error) {
+                res.status(401).json({ loggedIn: false });
+            }
         } catch(error) {
             console.log("Invalid token!");
             res.status(401).json({ loggedIn: false });
