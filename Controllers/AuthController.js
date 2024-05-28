@@ -62,22 +62,29 @@ const check_admin_login = async (req, res) => {
     const token = req.cookies.jwt_admin;
 
     if (token) {
-        jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
-            if (err) {
-                res.cookie('jwt_admin', '', { httpOnly: true, maxAge: 1 });
-                res.status(401).json({ loggedIn: false });
-            } else {
-                try {
-                    const admin = await find_admin_only_with_id(decoded.id);
-                    res.status(200).json({ ...admin, loggedIn: true });
-                } catch (error) {
-                    res.cookie('jwt_admin', '', { httpOnly: true, maxAge: 1 });
-                    res.status(401).json({ loggedIn: false });
-                }
-            }
-        });
+        try {
+            var decoded = jwt.verify(token, process.env.JWT_SECRET)
+            res.status(200).json({loggedIn: true });
+            console.log(decoded);
+        } catch(error) {
+            console.log("Invalid token!");
+            res.status(401).json({ loggedIn: false });
+        } 
+        // jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+        //     if (err) {
+        //         res.cookie('jwt_admin', '', { httpOnly: true, maxAge: 1 });
+        //         res.status(401).json({ loggedIn: false });
+        //     } else {
+        //         try {
+        //             const admin = await find_admin_only_with_id(decoded.id);
+        //             res.status(200).json({ ...admin, loggedIn: true });
+        //         } catch (error) {
+        //             res.cookie('jwt_admin', '', { httpOnly: true, maxAge: 1 });
+        //             res.status(401).json({ loggedIn: false });
+        //         }
+        //     }
+        // });
     } else {
-        res.cookie('jwt_admin', '', { httpOnly: true, maxAge: 1 });
         res.status(401).json({ loggedIn: false });
     }
 };
