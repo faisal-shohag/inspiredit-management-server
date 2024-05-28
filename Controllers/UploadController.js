@@ -52,10 +52,10 @@ const Storage = (dir) => {
 
 
 
-const studentUploader = multer({storage: Storage('students')})
-const teacherUploader = multer({storage: Storage('teachers')})
-const staffUploader = multer({storage: Storage('staffs')})
-const logoUploader = multer({storage: Storage('inst')})
+const studentUploader = multer({storage: Storage('temp')})
+const teacherUploader = multer({storage: Storage('temp')})
+const staffUploader = multer({storage: Storage('temp')})
+const logoUploader = multer({storage: Storage('temp')})
 
 
 
