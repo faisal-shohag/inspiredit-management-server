@@ -659,7 +659,7 @@ router.get("/transactions/total", async (req, res) => {
       netProfitThisMonth,
     });
   } catch (error) {
-    res.status(500).json({ error: "Error calculating totals" });
+    res.status(500).json({ error: "Error calculating totals", message: error });
   }
 });
 
