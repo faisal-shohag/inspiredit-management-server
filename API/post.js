@@ -1,5 +1,6 @@
 import prisma from "../DB/db.config.js";
 import { Router } from "express";
+import axios from 'axios'
 import {studentUploader, logoUploader, teacherUploader, staffUploader} from '../Controllers/UploadController.js'
 import { mailToStudent, mailToTeacher } from "../Controllers/MailController.js";
 const router = Router();
@@ -321,14 +322,50 @@ router.post('/transaction_add', async(req, res) => {
 
 
 
-//image 
-router.post('/student_upload', studentUploader.single('image'), (req, res)=> {
-    if(!req.file) {
-        return res.status(400).send("No file to upload!")
-    }
-    console.log(req.file)
 
-    res.send({ok: "ok", file: req.file})
+//image 
+import multer from "multer";
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+router.post('/upload/:type/:id', upload.single('image'), async(req, res)=> {
+    const id = req.params.id;
+    const type = req.params.type;
+
+    try {
+        const file = req.file;
+    
+        if (!file) {
+          return res.status(400).json({ error: 'No file uploaded' });
+        }
+    
+        // Convert file buffer to base64
+        const base64Image = file.buffer.toString('base64');
+    
+        // Prepare form data for ImgBB
+        const formData = new URLSearchParams();
+        formData.append('image', base64Image);
+    
+        // Upload to ImgBB
+        const response = await axios.post(
+          `https://api.imgbb.com/1/upload?key=8fc8712951eb00488098a3e9d6307fee`,
+          formData,
+          { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+        );
+    
+        let updateData= await prisma[type].update({
+            where: {id_no: id},
+            data: {
+                image: response.data
+            }
+        })
+        console.log(updateData)
+        res.status(200).send({data:response.data, updateData});
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        res.status(500).json({ error: 'Error uploading image' });
+      }
+
 })
 
 router.post('/teacher_upload', teacherUploader.single('image'), (req, res)=> {
