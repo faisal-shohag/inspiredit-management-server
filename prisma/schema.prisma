@@ -19,7 +19,7 @@ model Admin {
   inst_eiin          String?
   inst_email         String?
   inst_founding_date DateTime?
-  inst_image         String?
+  inst_image         Json?
   inst_name          String?
   inst_phone         String?
   staff_img_size     Int       @default(500)
@@ -38,7 +38,7 @@ model Teacher {
   joining_date      String
   fixed_salary      Int                  @default(0)
   nid               String?
-  image             String?
+  image             Json?
   gender            String?
   designation       String?
   department        String
@@ -103,7 +103,7 @@ model Student {
   group                String?
   session              String?
   id_no                String              @unique
-  image                String?
+  image                Json?
   gender               String
   date_of_birth        String
   blood_group          String?
@@ -199,7 +199,7 @@ model Staff {
   joining_date      String
   fixed_salary      Int
   nid               String?
-  image             String?
+  image             Json?
   gender            String?
   designation       String?
   department        String
@@ -264,3 +264,5 @@ model Transactions {
   regularFee     RegularFee?   @relation(fields: [regularFeeId], references: [id], onDelete: Cascade)
   salary         Salary?       @relation(fields: [salaryId], references: [id], onDelete: Cascade)
 }
+
+
