@@ -68,6 +68,33 @@ router.get("/latest_visitors", async (req, res) => {
   }
 });
 
+//visitor by date
+router.get('/visitors_by_date', async (req, res) => {
+  const { startDate, endDate } = req.query;
+
+  if (!startDate || !endDate) {
+    return res.status(400).json({ error: 'Please provide startDate and endDate' });
+  }
+
+  try {
+    const visitors = await prisma.visitor.findMany({
+      where: {
+        date: {
+          gte: new Date(startDate),
+          lte: new Date(endDate),
+        },
+      },
+    });
+
+    const totalVisitors = visitors.length;
+
+    res.json({ totalVisitors, visitors });
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while fetching visitors' });
+  }
+});
+
+
 
 // get staff
 

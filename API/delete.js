@@ -122,6 +122,22 @@ router.delete("/salary/:id", async (req, res) => {
   }
 });
 
+//visitor
+router.delete("/visitor/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  try {
+    const visitor = await prisma.visitor.delete({
+      where: {
+        id: id,
+      },
+    });
+    res.status(200).json(visitor);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ err: err });
+   
+  }
+});
 
 
 export default router;
