@@ -266,3 +266,14 @@ model Transactions {
 }
 
 
+
+model Visitor{
+  id             Int           @id @default(autoincrement())
+  name String
+  phone String
+  email String?
+  address String?
+  classes  Json
+  date DateTime @default(now())
+}
+

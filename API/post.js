@@ -144,10 +144,10 @@ router.post('/subject_add', async(req, res) => {
 router.post('/settings_add', async(req, res) => {
     const data = req.body
     try {
-        const subject = await prisma.settings.create({
+        const settings = await prisma.settings.create({
             data: {...data}
         })
-        res.status(200).json({success: true, created: subject})
+        res.status(200).json({success: true, created: settings})
     } catch (error) {
         console.log(error)
         if(error.code == "P2002") 
@@ -155,6 +155,8 @@ router.post('/settings_add', async(req, res) => {
         else res.status(400).json({err: "error"})
     }
 })
+
+
 
 router.post('/regular_fee', async(req, res) => {
     const data = req.body
@@ -226,6 +228,23 @@ router.post('/salary_add/:employee', async (req, res) => {
         }
     }
 });
+
+router.post('/visitor_add', async(req, res) => {
+    const data = req.body
+    try {
+        const visitors = await prisma.visitor.create({
+            data: {...data}
+        })
+        res.status(200).json({success: true, created: visitors})
+    } catch (error) {
+        console.log(error)
+        if(error.code == "P2002") 
+           res.status(403).send({err: "This teacher is already been added for this class and subject!"})
+        else res.status(400).json({err: "error"})
+    }
+})
+
+
 
 
 //add staff salary
