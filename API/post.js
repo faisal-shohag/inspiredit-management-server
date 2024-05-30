@@ -239,7 +239,7 @@ router.post('/visitor_add', async(req, res) => {
     } catch (error) {
         console.log(error)
         if(error.code == "P2002") 
-           res.status(403).send({err: "This teacher is already been added for this class and subject!"})
+           res.status(403).send({err: ""})
         else res.status(400).json({err: "error"})
     }
 })
