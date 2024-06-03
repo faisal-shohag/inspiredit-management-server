@@ -748,6 +748,22 @@ router.get("/transactions/with-month", async (req, res) => {
   }
 });
 
+
+//issues
+router.get("/issues", async (req, res) => {
+  try {
+    const issues = await prisma.issues.findMany({
+      orderBy: {
+        created_at: "desc",
+      },
+    });
+    res.status(200).json(issues);
+  } catch (err) {
+    res.status(400).json({ err: err });
+    console.log(err);
+  }
+});
+
 router.get("/image2/:folder/:file", (req, res) => {
   const folder = req.params.folder;
   const file = req.params.file;
