@@ -91,7 +91,7 @@ model Subject {
 model Student {
   id                   Int                 @id @default(autoincrement())
   uuid                 String              @default(uuid())
-  email                String              @unique
+  email                String?
   phone                String?
   password             String
   present_address      String
@@ -277,3 +277,11 @@ model Visitor{
   date DateTime @default(now())
 }
 
+
+model Issues {
+  id             Int           @id @default(autoincrement())
+  issue String
+  isSolved Boolean @default(false)
+  feature Json
+  date DateTime @default(now())
+}

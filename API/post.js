@@ -339,6 +339,23 @@ router.post('/transaction_add', async(req, res) => {
     }
 })
 
+//issues
+router.post('/issue_add', async(req, res) => {
+    const data = req.body
+
+    try {
+        const issues = await prisma.issues.create({
+            data: {...data}
+        })
+        res.status(200).json({success: true, created: issues})
+    } catch (error) {
+        console.log(error)
+        if(error.code == "P2002") 
+            res.status(403).send({err: "Something messy!"})
+         else res.status(400).json({err: "Something went wrong! Did you filled all the fields!"})
+    }
+})
+
 
 
 
