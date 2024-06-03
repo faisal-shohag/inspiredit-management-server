@@ -754,7 +754,7 @@ router.get("/issues", async (req, res) => {
   try {
     const issues = await prisma.issues.findMany({
       orderBy: {
-        created_at: "desc",
+        date: "desc",
       },
     });
     res.status(200).json(issues);
