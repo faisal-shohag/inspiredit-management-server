@@ -88,6 +88,13 @@ router.post('/admission_fee', async(req, res) => {
 
 
 
+const batch_start = {
+    "Basic Computer": "8",
+    "Web Development": "8",
+    "Digital Marketing": "39",
+    "Graphics Design": "135",
+    "SEO": "6",
+}
 
 //class 
 router.post('/class_add', async(req, res) => {
@@ -98,7 +105,7 @@ router.post('/class_add', async(req, res) => {
         })
 
         const section = await prisma.section.create({
-            data: {name: "1", classId: _class.id}
+            data: {name: batch_start[data.name] ? batch_start[data.name] : "1" , classId: _class.id}
         })
 
         res.status(200).json({success: true, created: _class})
