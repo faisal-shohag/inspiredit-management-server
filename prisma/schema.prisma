@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgres"
-  url      = env("DATABASE_URL")
+  provider  = "postgres"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Admin {
@@ -93,6 +94,7 @@ model Student {
   uuid                 String              @default(uuid())
   email                String?
   phone                String?
+  alt_phone            String?
   password             String
   present_address      String
   permanent_address    String
@@ -245,7 +247,7 @@ model Account {
   check_number     String?
   purpose          String?
   transaction_type String?
-  incharge       String?
+  incharge         String?
   transaction      Transactions[]
 }
 
@@ -265,23 +267,20 @@ model Transactions {
   salary         Salary?       @relation(fields: [salaryId], references: [id], onDelete: Cascade)
 }
 
-
-
-model Visitor{
-  id             Int           @id @default(autoincrement())
-  name String
-  phone String
-  email String?
+model Visitor {
+  id      Int      @id @default(autoincrement())
+  name    String
+  phone   String
+  email   String?
   address String?
-  classes  Json
-  date DateTime @default(now())
+  classes Json
+  date    DateTime @default(now())
 }
 
-
 model Issues {
-  id             Int           @id @default(autoincrement())
-  issue String
-  isSolved Boolean @default(false)
-  feature Json
-  date DateTime @default(now())
+  id       Int      @id @default(autoincrement())
+  issue    String
+  isSolved Boolean  @default(false)
+  feature  Json
+  date     DateTime @default(now())
 }
