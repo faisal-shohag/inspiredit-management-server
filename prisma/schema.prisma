@@ -5,7 +5,7 @@ generator client {
 datasource db {
   provider  = "postgres"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 model Admin {
@@ -120,6 +120,7 @@ model Student {
   class                Class               @relation(fields: [classId], references: [id], onDelete: Cascade)
   section              Section?            @relation(fields: [sectionId], references: [id], onDelete: Cascade)
   attendance           StudentAttendance[]
+  discount             Float @default(0)
 }
 
 model AdmissionFee {

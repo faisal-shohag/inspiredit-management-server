@@ -74,7 +74,11 @@ router.post('/admission_fee', async(req, res) => {
             data: {...data}
         })
         const transactions = await prisma.transactions.create({
-            data: {admissionFeeId: fee.id, amount: (data.fee + data.other) - data.discount, name: 'Addmission Fee', type: 'income'}
+            data: {admissionFeeId: fee.id, amount: (data.fee + data.other), name: 'Addmission Fee', type: 'income'}
+        })
+        await prisma.student.update({
+            where: {id: data.studentId},
+            data: {discount: data.discount}
         })
         res.status(200).json({success: true, created: fee})
     } catch (error) {
