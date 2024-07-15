@@ -19,6 +19,22 @@ const getMonthName = (dateString) => {
   };
 };
 
+
+router.get('/admin', async(req, res) => {
+  try{
+    const admin = await prisma.admin.findUnique({
+      where: {
+        email: 'admin@gmail.com'
+      }
+    });
+    res.status(200).json(admin);
+  }catch{
+    console.log(err);
+    res.status(400).json({ err: err });
+  }
+  
+})
+
 //all teachers
 router.get("/teachers", async (req, res) => {
   try {
