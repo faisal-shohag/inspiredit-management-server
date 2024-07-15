@@ -107,7 +107,7 @@ model Student {
   id_no                String              @unique
   image                Json?
   gender               String
-  date_of_birth        String
+  date_of_birth        String?
   blood_group          String?
   admission_date       DateTime?           @default(now())
   created_at           DateTime            @default(now())
