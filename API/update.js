@@ -183,4 +183,34 @@ router.put('/class/attendance/:attendanceId/:studentId/:date', async(req, res) =
     }
 })
 
+router.put('/account/:id', async(req, res) => {
+    
+    const data = req.body
+    const id = parseInt(req.params.id)
+    // console.log(data)
+    try {
+        const account = await prisma.account.update({
+            where: {
+                id: parseInt(id)
+            },
+            data: {...data}
+        })
+        // await prisma.transactions.deleteMany({
+        //     where: {
+        //         accountId: parseInt(id)
+        //     }
+        // })
+        await prisma.transactions.updateMany({
+            where: {
+                accountId: parseInt(id)
+            },
+            data: {date: data.date, amount: data.amount, name: data.purpose, type: data.type}
+        })
+        res.status(200).json({success: true, updated: account})
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({err: "error"})
+    }
+})
+
 export default router

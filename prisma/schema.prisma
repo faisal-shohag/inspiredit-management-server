@@ -60,8 +60,8 @@ model ClassesAndTeachers {
   teacherId  Int
   classId    Int
   created_at DateTime @default(now())
-  class      Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
-  teacher    Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  class      Class    @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  teacher    Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([teacherId, classId])
 }
@@ -83,8 +83,8 @@ model Subject {
   mark      Int     @default(0)
   classId   Int
   teacherId Int
-  class     Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
-  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  class     Class   @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([classId, teacherId])
 }
@@ -117,8 +117,8 @@ model Student {
   name                 String
   admissionFee         AdmissionFee[]
   regularFee           RegularFee[]
-  class                Class               @relation(fields: [classId], references: [id], onDelete: Cascade)
-  section              Section?            @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  class                Class               @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  section              Section?            @relation(fields: [sectionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   attendance           StudentAttendance[]
   discount             Float @default(0)
 }
@@ -131,7 +131,7 @@ model AdmissionFee {
   studentId      Int
   other          Float          @default(0)
   readmission    Boolean        @default(false)
-  student        Student        @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  student        Student        @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   incharge       String?
   transaction    Transactions[]
 }
@@ -150,7 +150,7 @@ model RegularFee {
   uniform_fee    Float          @default(0)
   due            Float          @default(0)
   incharge       String?
-  student        Student        @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  student        Student        @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   transaction    Transactions[]
 }
 
@@ -158,7 +158,7 @@ model Section {
   id         Int                 @id @default(autoincrement())
   name       String?
   classId    Int
-  class      Class               @relation(fields: [classId], references: [id], onDelete: Cascade)
+  class      Class               @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   student    Student[]
   attendence StudentAttendance[]
 }
@@ -170,9 +170,9 @@ model StudentAttendance {
   sectionId Int?
   isPresent Boolean
   date      DateTime @default(now())
-  class     Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
-  section   Section? @relation(fields: [sectionId], references: [id], onDelete: Cascade)
-  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  class     Class    @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  section   Section? @relation(fields: [sectionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model TeacherAttendence {
@@ -180,7 +180,7 @@ model TeacherAttendence {
   teacherId Int
   isPresent Boolean
   date      DateTime @default(now())
-  teacher   Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  teacher   Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model StaffAttendance {
@@ -188,7 +188,7 @@ model StaffAttendance {
   staffId   Int
   isPresent Boolean
   date      DateTime @default(now())
-  satff     Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  satff     Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Staff {
@@ -223,8 +223,8 @@ model Salary {
   teacherId      Int?
   paid_date      DateTime       @default(now())
   staffId        Int?
-  staff          Staff?         @relation(fields: [staffId], references: [id], onDelete: Cascade)
-  teacher        Teacher?       @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  staff          Staff?         @relation(fields: [staffId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  teacher        Teacher?       @relation(fields: [teacherId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   incharge       String?
   transaction    Transactions[]
 }
@@ -258,14 +258,14 @@ model Transactions {
   date           DateTime      @default(now())
   name           String
   type           String
-  accountId      Int?
+  accountId      Int?          
   admissionFeeId Int?
   regularFeeId   Int?
   salaryId       Int?
-  account        Account?      @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  admissionFee   AdmissionFee? @relation(fields: [admissionFeeId], references: [id], onDelete: Cascade)
-  regularFee     RegularFee?   @relation(fields: [regularFeeId], references: [id], onDelete: Cascade)
-  salary         Salary?       @relation(fields: [salaryId], references: [id], onDelete: Cascade)
+  account        Account?      @relation(fields: [accountId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  admissionFee   AdmissionFee? @relation(fields: [admissionFeeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  regularFee     RegularFee?   @relation(fields: [regularFeeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  salary         Salary?       @relation(fields: [salaryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Visitor {
